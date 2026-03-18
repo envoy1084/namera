@@ -37,6 +37,6 @@ export const shared: ViteUserConfig = {
   },
 };
 
-export function createVitestConfig(config?: ViteUserConfig) {
+export function createVitestConfig(config?: ViteUserConfig): ViteUserConfig {
   return mergeConfig(shared, config ?? {});
 }
