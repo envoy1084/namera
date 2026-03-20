@@ -7,6 +7,7 @@ import {
   GetKeystoreParams,
   ImportKeystoreParams,
   ListKeystoreParams,
+  RemoveKeystoreParams,
 } from "@/dto";
 import { extractPaths, getSchema } from "@/helpers/paths";
 
@@ -20,6 +21,7 @@ const schemas = {
     info: GetKeystoreParams,
     list: ListKeystoreParams,
     import: ImportKeystoreParams,
+    remove: RemoveKeystoreParams,
   },
 };
 

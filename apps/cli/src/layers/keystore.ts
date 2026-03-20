@@ -83,11 +83,7 @@ export type KeystoreManager = {
    */
   removeKeystore: (params: {
     readonly alias: string;
-  }) => Effect.Effect<
-    undefined,
-    ConfigManagerError | KeystoreManagerError,
-    never
-  >;
+  }) => Effect.Effect<void, ConfigManagerError | KeystoreManagerError, never>;
 };
 
 /**
@@ -353,7 +349,7 @@ export const layer = Layer.effect(
           );
         }
 
-        yield* configManager.removeEntity({
+        return yield* configManager.removeEntity({
           alias: params.alias,
           type: "keystore",
         });

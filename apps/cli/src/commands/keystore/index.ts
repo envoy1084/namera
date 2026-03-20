@@ -6,6 +6,7 @@ import { decryptKeystoreCommand } from "./decrypt";
 import { importKeystoreCommand } from "./import";
 import { getKeystoreInfoCommand } from "./info";
 import { listKeystoresCommand } from "./list";
+import { removeKeystoreCommand } from "./remove";
 
 /**
  * Command group for keystore-related operations.
@@ -23,5 +24,6 @@ export const keystoreCommands = Command.make(
     getKeystoreInfoCommand,
     decryptKeystoreCommand,
     importKeystoreCommand,
+    removeKeystoreCommand,
   ]),
 );
