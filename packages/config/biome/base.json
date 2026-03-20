@@ -166,7 +166,7 @@
                 "selector": { "kind": "function" }
               },
               {
-                "formats": ["camelCase"],
+                "formats": ["camelCase", "PascalCase"],
                 "selector": { "kind": "namespaceLike" }
               },
               {
