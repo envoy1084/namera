@@ -1,4 +1,22 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
-  "extends": "//"
+  "extends": "//",
+  "overrides": [
+    {
+      "includes": ["src/layers/**/*.ts"],
+      "linter": {
+        "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } }
+      }
+    },
+    {
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedKeys": "off"
+          }
+        }
+      },
+      "includes": ["**/*.ts", "**/*.tsx"]
+    }
+  ]
 }
