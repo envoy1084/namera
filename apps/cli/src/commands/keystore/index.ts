@@ -3,6 +3,7 @@ import { Command } from "effect/unstable/cli";
 
 import { createKeystoreCommand } from "./create";
 import { decryptKeystoreCommand } from "./decrypt";
+import { importKeystoreCommand } from "./import";
 import { getKeystoreInfoCommand } from "./info";
 import { listKeystoresCommand } from "./list";
 
@@ -21,5 +22,6 @@ export const keystoreCommands = Command.make(
     listKeystoresCommand,
     getKeystoreInfoCommand,
     decryptKeystoreCommand,
+    importKeystoreCommand,
   ]),
 );

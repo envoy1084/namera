@@ -48,8 +48,14 @@ export const ImportKeystoreParams = Schema.Struct({
   privateKey: Schema.String.annotate({
     description: "The private key of the keystore to import",
   }),
-  password: Schema.Redacted(Schema.String).annotate({
+  password: Schema.redact(Schema.String).annotate({
     description: "The password to encrypt the keystore with",
+  }),
+});
+
+export const RemoveKeystoreParams = Schema.Struct({
+  alias: Schema.String.annotate({
+    description: "The alias of the keystore to remove",
   }),
 });
 
@@ -59,3 +65,4 @@ export type CreateKeystoreParams = typeof CreateKeystoreParams.Type;
 export type DecryptKeystoreParams = typeof DecryptKeystoreParams.Type;
 export type DecryptKeystoreResponse = typeof DecryptKeystoreResponse.Type;
 export type ImportKeystoreParams = typeof ImportKeystoreParams.Type;
+export type RemoveKeystoreParams = typeof RemoveKeystoreParams.Type;

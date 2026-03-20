@@ -5,6 +5,7 @@ import {
   CreateKeystoreParams,
   DecryptKeystoreParams,
   GetKeystoreParams,
+  ImportKeystoreParams,
   ListKeystoreParams,
 } from "@/dto";
 import { extractPaths, getSchema } from "@/helpers/paths";
@@ -18,6 +19,7 @@ const schemas = {
     decrypt: DecryptKeystoreParams,
     info: GetKeystoreParams,
     list: ListKeystoreParams,
+    import: ImportKeystoreParams,
   },
 };
 

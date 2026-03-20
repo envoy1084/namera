@@ -3,12 +3,15 @@ import { Data, Effect, Layer, Redacted, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";
 import type { Environment } from "effect/unstable/cli/Prompt";
+import { type Hex, hexToBytes } from "viem";
 
 import type {
   CreateKeystoreParams,
   DecryptKeystoreParams,
   DecryptKeystoreResponse,
   GetKeystoreParams,
+  ImportKeystoreParams,
+  RemoveKeystoreParams,
 } from "@/dto";
 import type { Keystore, V3Keystore } from "@/types";
 
@@ -61,6 +64,30 @@ export type KeystoreManager = {
     DecryptKeystoreResponse,
     KeystoreManagerError | ConfigManagerError
   >;
+  /**
+   * Imports a keystore from a private key and stores as a keystore.
+   *
+   * @param params - Alias and private key for the keystore to import.
+   */
+  importKeystore: (
+    params: ImportKeystoreParams,
+  ) => Effect.Effect<
+    Keystore,
+    ConfigManagerError | KeystoreManagerError,
+    never
+  >;
+  /**
+   * Removes a keystore from storage.
+   *
+   * @param params - Alias of the keystore to remove.
+   */
+  removeKeystore: (params: {
+    readonly alias: string;
+  }) => Effect.Effect<
+    undefined,
+    ConfigManagerError | KeystoreManagerError,
+    never
+  >;
 };
 
 /**
@@ -80,7 +107,8 @@ export class KeystoreManagerError extends Data.TaggedError(
     | "KeystoreParseError"
     | "KeystoreAlreadyExists"
     | "KeystoreCreationFailed"
-    | "KeystoreDecryptionFailed";
+    | "KeystoreDecryptionFailed"
+    | "KeystoreNotFound";
   message: string;
 }> {}
 
@@ -200,13 +228,13 @@ export const layer = Layer.effect(
           try: () => JSON.parse(keystoreString) as V3Keystore,
         });
 
-        const wallet: Keystore = {
+        const data: Keystore = {
           alias: params.alias,
           data: keystore,
           path: entityPath,
         };
 
-        return wallet;
+        return data;
       });
 
     const decryptKeystore = (params: DecryptKeystoreParams) =>
@@ -248,12 +276,97 @@ export const layer = Layer.effect(
         return res;
       });
 
+    const importKeystore = (params: ImportKeystoreParams) =>
+      Effect.gen(function* () {
+        const entityPath = yield* configManager.getEntityPath({
+          alias: params.alias,
+          type: "keystore",
+        });
+
+        // Check if alias is already taken
+        const aliasTaken = yield* configManager.checkEntityExists({
+          alias: params.alias,
+          type: "keystore",
+        });
+
+        if (aliasTaken) {
+          return yield* Effect.fail(
+            new KeystoreManagerError({
+              code: "KeystoreAlreadyExists",
+              message: `Keystore with alias ${params.alias} already exists`,
+            }),
+          );
+        }
+
+        const keystoreString = yield* Effect.tryPromise({
+          catch: () =>
+            new KeystoreManagerError({
+              code: "KeystoreCreationFailed",
+              message: "Failed to create keystore",
+            }),
+          try: () =>
+            EthereumJSWallet.fromPrivateKey(
+              hexToBytes(params.privateKey as Hex),
+            ).toV3String(params.password),
+        });
+
+        // Store Entity
+        yield* configManager.storeEntity({
+          alias: params.alias,
+          content: keystoreString,
+          path: entityPath,
+          type: "keystore",
+        });
+
+        const keystore = yield* Effect.try({
+          catch: () =>
+            new KeystoreManagerError({
+              code: "KeystoreParseError",
+              message: "Unable to parse keystore",
+            }),
+          try: () => JSON.parse(keystoreString) as V3Keystore,
+        });
+
+        const data: Keystore = {
+          alias: params.alias,
+          data: keystore,
+          path: entityPath,
+        };
+
+        return data;
+      });
+
+    const removeKeystore = (params: RemoveKeystoreParams) =>
+      Effect.gen(function* () {
+        // Check if alias exists
+        const exists = yield* configManager.checkEntityExists({
+          alias: params.alias,
+          type: "keystore",
+        });
+
+        if (!exists) {
+          return yield* Effect.fail(
+            new KeystoreManagerError({
+              code: "KeystoreNotFound",
+              message: `Keystore with alias ${params.alias} does not exist`,
+            }),
+          );
+        }
+
+        yield* configManager.removeEntity({
+          alias: params.alias,
+          type: "keystore",
+        });
+      });
+
     return KeystoreManager.of({
       createKeystore,
       decryptKeystore,
       getKeystore,
       listKeystores,
       selectKeystore,
+      importKeystore,
+      removeKeystore,
     });
   }),
 );

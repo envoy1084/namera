@@ -1,6 +1,7 @@
 import { Data, Effect, Layer, type Redacted, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import { Prompt } from "effect/unstable/cli";
+import { type Hex, hexToBytes, isHex } from "viem";
 
 import { type EntityType, entityName } from "@/types";
 
@@ -34,6 +35,18 @@ export type PromptManager = {
   selectPrompt: <const A>(
     params: Prompt.SelectOptions<A>,
   ) => Effect.Effect<A, QuitError, Prompt.Environment>;
+  /**
+   * Prompts the user to enter a hex value.
+   *
+   * @param params - Prompt text and expected length of the hex value.
+   */
+  hexPrompt: <TRedacted extends boolean>(
+    params: HexPromptParams<TRedacted>,
+  ) => Effect.Effect<
+    TRedacted extends true ? Redacted.Redacted<Hex> : Hex,
+    QuitError,
+    Prompt.Environment
+  >;
 };
 
 /**
@@ -83,6 +96,24 @@ export type PasswordPromptParams = {
    * Optional validator returning the original value or a failure message.
    */
   validate?: (v: string) => Effect.Effect<string, string, never>;
+};
+
+/**
+ * Parameters for prompting a user for a hex value.
+ */
+export type HexPromptParams<TRedacted extends boolean> = {
+  /**
+   * Expected length of the hex value.
+   */
+  length: number;
+  /**
+   * Prompt message shown to the user.
+   */
+  message: string;
+  /**
+   * Whether the hex value should be redacted.
+   */
+  redacted: TRedacted;
 };
 
 /**
@@ -159,6 +190,56 @@ export const layer = Layer.effect(
         return yield* Prompt.select(params);
       });
 
-    return PromptManager.of({ aliasPrompt, passwordPrompt, selectPrompt });
+    function hexPrompt(
+      params: HexPromptParams<true>,
+    ): Effect.Effect<Redacted.Redacted<Hex>, QuitError, Prompt.Environment>;
+
+    function hexPrompt(
+      params: HexPromptParams<false>,
+    ): Effect.Effect<Hex, QuitError, Prompt.Environment>;
+
+    function hexPrompt(params: HexPromptParams<boolean>) {
+      return Effect.gen(function* () {
+        const validate = (v: string) =>
+          Effect.gen(function* () {
+            if (v.trim() === "") {
+              return yield* Effect.fail("Hex cannot be empty");
+            }
+
+            if (!isHex(v)) {
+              return yield* Effect.fail("Invalid hex value");
+            }
+
+            const len = hexToBytes(v).length;
+
+            if (len !== params.length) {
+              return yield* Effect.fail(
+                `Hex value must be ${params.length} bytes`,
+              );
+            }
+
+            return v;
+          });
+
+        if (params.redacted) {
+          return yield* Prompt.password({
+            message: params.message,
+            validate,
+          });
+        }
+
+        return yield* Prompt.text({
+          message: params.message,
+          validate,
+        });
+      });
+    }
+
+    return PromptManager.of({
+      aliasPrompt,
+      passwordPrompt,
+      selectPrompt,
+      hexPrompt,
+    });
   }),
 );

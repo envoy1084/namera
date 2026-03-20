@@ -57,6 +57,14 @@ export type ConfigManager = {
   storeEntity: <TEntityType extends EntityType>(
     entity: Entity<TEntityType>,
   ) => Effect.Effect<Entity<TEntityType>, ConfigManagerError>;
+  /**
+   * Removes an entity from disk.
+   *
+   * @param entity - Entity type and alias to remove.
+   */
+  removeEntity: <TEntityType extends EntityType>(
+    entity: GetEntityParams<TEntityType>,
+  ) => Effect.Effect<void, ConfigManagerError>;
 };
 
 /**
@@ -267,6 +275,24 @@ export const layer = Layer.effect(
         ),
       );
 
+    const removeEntity = <TEntityType extends EntityType>(
+      entity: GetEntityParams<TEntityType>,
+    ) =>
+      Effect.gen(function* () {
+        const entityPath = yield* getEntityPath(entity);
+
+        yield* fs.remove(entityPath).pipe(
+          Effect.catchTag("PlatformError", (e) =>
+            Effect.fail(
+              new ConfigManagerError({
+                code: e.reason._tag,
+                message: e.message,
+              }),
+            ),
+          ),
+        );
+      });
+
     return ConfigManager.of({
       checkEntityExists,
       ensureConfigDirExists,
@@ -275,6 +301,7 @@ export const layer = Layer.effect(
       getEntity,
       getEntityPath,
       storeEntity,
+      removeEntity,
     });
   }),
 );
