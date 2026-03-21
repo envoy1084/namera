@@ -1,7 +1,6 @@
 import { Schema } from "effect";
 
-import { BigIntFromString, EthereumAddress } from "./common";
-import { Permission } from "./permission";
+import { BigIntFromString, EthereumAddress, Hex } from "./common";
 
 export const SudoPolicyParams = Schema.Struct({
   type: Schema.Literal("sudo"),
@@ -25,7 +24,7 @@ export const TimestampPolicyParams = Schema.Struct({
 
 export const SignatureCallerPolicyParams = Schema.Struct({
   type: Schema.Literal("signature-caller"),
-  allowedCallers: Schema.optional(Schema.Array(EthereumAddress)).annotate({
+  allowedCallers: Schema.mutable(Schema.Array(EthereumAddress)).annotate({
     description:
       "List of addresses that are allowed to validate messages signed by the signer.",
   }),
@@ -58,9 +57,84 @@ export const GasPolicyParams = Schema.Struct({
   }),
 });
 
+export const CallPolicyVersion = Schema.Literals([
+  "0.0.1",
+  "0.0.2",
+  "0.0.3",
+  "0.0.4",
+  "0.0.5",
+]);
+export type CallPolicyVersion = typeof CallPolicyVersion.Type;
+
+const CallType = Schema.Literals(["call", "delegatecall", "batch-call"]);
+
+export const ParamCondition = Schema.Literals([
+  "EQUAL",
+  "GREATER_THAN",
+  "LESS_THAN",
+  "GREATER_THAN_OR_EQUAL",
+  "LESS_THAN_OR_EQUAL",
+  "NOT_EQUAL",
+  "ONE_OF",
+  "SLICE_EQUAL",
+]);
+
+export type ParamCondition = typeof ParamCondition.Type;
+
+const ConditionValue = Schema.Union([
+  Schema.Struct({
+    condition: ParamCondition.pick(["ONE_OF"]),
+    value: Schema.mutable(Schema.Array(Schema.Any)),
+  }),
+  Schema.Struct({
+    condition: ParamCondition.pick(["SLICE_EQUAL"]),
+    value: Schema.Any,
+    start: Schema.Number,
+    length: Schema.Number,
+  }),
+  Schema.Struct({
+    condition: ParamCondition.pick([
+      "EQUAL",
+      "GREATER_THAN",
+      "LESS_THAN",
+      "GREATER_THAN_OR_EQUAL",
+      "LESS_THAN_OR_EQUAL",
+      "NOT_EQUAL",
+      "SLICE_EQUAL",
+    ]),
+    value: Schema.Any,
+  }),
+]);
+
+const ParamRule = Schema.Struct({
+  condition: ParamCondition,
+  offset: Schema.Number,
+  params: Schema.Union([Hex, Schema.mutable(Schema.Array(Hex))]),
+});
+
+const PermissionManual = Schema.Struct({
+  callType: Schema.optional(CallType),
+  target: EthereumAddress,
+  selector: Hex,
+  valueLimit: Schema.optional(BigIntFromString),
+  rules: Schema.optional(Schema.Array(ParamRule)),
+});
+
+const PermissionWithABI = Schema.Struct({
+  callType: Schema.optional(CallType),
+  target: EthereumAddress,
+  selector: Hex,
+  valueLimit: Schema.optional(BigIntFromString),
+  abi: Schema.Any,
+  functionName: Schema.String,
+  args: Schema.optional(Schema.Array(ConditionValue)),
+});
+
+export const Permission = Schema.Union([PermissionManual, PermissionWithABI]);
+
 export const CallPolicyParams = Schema.Struct({
   type: Schema.Literal("call"),
-  policyVersion: Schema.Literals(["0.0.1", "0.0.2", "0.0.3", "0.0.4", "0.0.5"]),
+  policyVersion: CallPolicyVersion,
   permissions: Schema.optional(Schema.Array(Permission)),
 });
 
