@@ -1,0 +1,82 @@
+## Development (current)
+
+### Docs
+
+- [x] Basic Project Scaffolding
+- [x] Support for Markdown
+- [x] Support for Code Snippets
+- [x] Support for Math Expressions
+- [x] Support for Typescript Twoslash
+- [x] Last Modified Date (at bottom of page)
+- [x] Mermaid Diagrams
+- [x] Workspaces like structure for docs
+- [x] Dynamic OG Image Generation
+- [ ] Home Page
+- [ ] Writing Docs
+  - [ ] Framework Docs
+  - [ ] CLI Docs
+  - [ ] MCP Docs
+  - [ ] Core Docs
+  - [ ] x402 Docs
+  - [ ] MPP Docs
+
+### CLI
+
+- [x] Basic Project Scaffolding
+- [x] Prompting Library
+  - [x] Text Prompts
+  - [x] Password Prompts
+  - [x] Select Prompts
+  - [ ] Multi Select Prompts
+  - [ ] Confirm Prompts
+  - [ ] Date Prompts
+  - [ ] File Prompts
+  - [ ] Number Prompts
+  - [x] Ethereum Address/Private Key Prompts
+- [x] Command Groups
+  - [ ] Keystores
+    - [x] Create Keystore
+    - [x] List Keystores
+    - [x] Decrypt Keystore
+    - [x] Import Keystore
+    - [x] Remove Keystore
+    - [x] Get Keystore
+  - [ ] Smart Accounts
+    - [ ] Create Smart Account
+    - [ ] List Smart Accounts
+    - [ ] Get Smart Account
+    - [ ] Remove Smart Account
+    - [ ] Get Smart Account Deployment Status (per chain)
+    - [ ] Import Smart Account (assuming owner keystore is present)
+  - [ ] Session Keys
+    - [ ] Create Session Key
+      - [ ] Sudo Policy
+      - [ ] Timestamp Policy
+      - [ ] Gas Policy
+      - [ ] Call Policy
+      - [ ] Signature Policy
+      - [ ] Rate Limit Policy
+    - [ ] Get Session Key
+    - [ ] List Session Keys (All and per Smart Account)
+    - [ ] Revoke Session Key
+    - [ ] Get Session Key Installation Status (per chain)   
+  - [x] Schemas
+    - [x] Get CLI Command Params Schema
+  - [ ] MCP Server
+    - [x] 1 Account, N Session Keys Server
+    - [x] Tools
+      - [x] Account Tools
+        - [x] `get_wallet_address`
+        - [ ] `get_balance`
+        - [ ] `get_token_balance`
+      - [ ] Transfer Tools
+        - [x] `native_transfer`
+        - [ ] `erc20_transfer`
+      - [ ] Transaction Tools
+        - [ ] `execute_transaction`
+        - [ ] `execute_batch`
+        - [ ] `simulate_transaction`
+        - [ ] `simulate_batch`
+      - [ ] Token Utilities
+        - [ ] `get_allowance`
+        - [ ] `approve_erc20`
