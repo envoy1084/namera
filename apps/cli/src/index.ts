@@ -9,6 +9,7 @@ import {
   KeystoreManager,
   OutputFormatter,
   PromptManager,
+  SmartAccountManager,
 } from "./layers";
 
 const command = Command.make("namera", {}, () => Effect.void).pipe(
@@ -29,7 +30,8 @@ const command = Command.make("namera", {}, () => Effect.void).pipe(
   ]),
 );
 
-const Layers = KeystoreManager.layer.pipe(
+const Layers = SmartAccountManager.layer.pipe(
+  Layer.provideMerge(KeystoreManager.layer),
   Layer.provideMerge(PromptManager.layer),
   Layer.provideMerge(ConfigManager.layer),
   Layer.provideMerge(OutputFormatter.layer),

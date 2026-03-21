@@ -39,8 +39,12 @@ export type KeystoreManager = {
   >;
   /**
    * Opens an interactive prompt to select a keystore from stored entries.
+   *
+   * @param params - Prompt message.
    */
-  selectKeystore: () => Effect.Effect<
+  selectKeystore: (params: {
+    message: string;
+  }) => Effect.Effect<
     Keystore,
     ConfigManagerError | KeystoreManagerError | QuitError,
     Environment
@@ -256,12 +260,12 @@ export const layer = Layer.effect(
         };
       });
 
-    const selectKeystore = () =>
+    const selectKeystore = (params: { message: string }) =>
       Effect.gen(function* () {
         const keystores = yield* listKeystores();
 
         const res = yield* promptManager.selectPrompt({
-          message: "Select Keystore",
+          message: params.message,
           choices: keystores.map((k) => ({
             title: k.alias,
             value: k,

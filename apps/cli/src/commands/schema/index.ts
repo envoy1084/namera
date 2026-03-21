@@ -1,14 +1,7 @@
 import { Console, Effect, Schema } from "effect";
 import { Argument, Command } from "effect/unstable/cli";
 
-import {
-  CreateKeystoreParams,
-  DecryptKeystoreParams,
-  GetKeystoreParams,
-  ImportKeystoreParams,
-  ListKeystoreParams,
-  RemoveKeystoreParams,
-} from "@/dto";
+import * as Dto from "@/dto";
 import { extractPaths, getSchema } from "@/helpers/paths";
 
 /**
@@ -16,12 +9,15 @@ import { extractPaths, getSchema } from "@/helpers/paths";
  */
 const schemas = {
   keystore: {
-    create: CreateKeystoreParams,
-    decrypt: DecryptKeystoreParams,
-    info: GetKeystoreParams,
-    list: ListKeystoreParams,
-    import: ImportKeystoreParams,
-    remove: RemoveKeystoreParams,
+    create: Dto.CreateKeystoreParams,
+    decrypt: Dto.DecryptKeystoreParams,
+    info: Dto.GetKeystoreParams,
+    list: Dto.ListKeystoreParams,
+    import: Dto.ImportKeystoreParams,
+    remove: Dto.RemoveKeystoreParams,
+  },
+  "smart-account": {
+    create: Dto.CreateSmartAccountParams,
   },
 };
 

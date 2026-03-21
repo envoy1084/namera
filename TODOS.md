@@ -34,7 +34,7 @@
   - [ ] Number Prompts
   - [x] Ethereum Address/Private Key Prompts
 - [x] Command Groups
-  - [ ] Keystores
+  - [x] Keystores
     - [x] Create Keystore
     - [x] List Keystores
     - [x] Decrypt Keystore
