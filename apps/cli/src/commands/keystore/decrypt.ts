@@ -29,7 +29,9 @@ const handler = (
       if (flagAlias._tag === "Some") {
         alias = flagAlias.value;
       } else {
-        const res = yield* keystoreManager.selectKeystore();
+        const res = yield* keystoreManager.selectKeystore({
+          message: "Select keystore:",
+        });
         alias = res.alias;
       }
 
