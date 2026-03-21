@@ -71,6 +71,14 @@ export const GetSmartAccountStatusParams = Schema.Struct({
   }),
 });
 
+export const ImportSmartAccountParams = LocalSmartAccount.pipe(
+  Schema.fieldsAssign({
+    alias: Schema.String.annotate({
+      description: "The alias of the smart account to import",
+    }),
+  }),
+);
+
 export type LocalSmartAccount = typeof LocalSmartAccount.Type;
 export type LocalSmartAccountData = typeof LocalSmartAccountData.Type;
 export type CreateSmartAccountParams = typeof CreateSmartAccountParams.Type;
@@ -80,3 +88,5 @@ export type GetSmartAccountInfoParams = typeof GetSmartAccountInfoParams.Type;
 export type RemoveSmartAccountParams = typeof RemoveSmartAccountParams.Type;
 export type GetSmartAccountStatusParams =
   typeof GetSmartAccountStatusParams.Type;
+
+export type ImportSmartAccountParams = typeof ImportSmartAccountParams.Type;

@@ -22,6 +22,7 @@ const schemas = {
     info: Dto.GetSmartAccountInfoParams,
     remove: Dto.RemoveSmartAccountParams,
     status: Dto.GetSmartAccountStatusParams,
+    import: Dto.ImportSmartAccountParams,
   },
 };
 

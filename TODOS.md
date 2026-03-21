@@ -47,7 +47,7 @@
     - [x] Get Smart Account
     - [x] Remove Smart Account
     - [x] Get Smart Account Deployment Status (per chain)
-    - [ ] Import Smart Account (assuming owner keystore is present)
+    - [x] Import Smart Account (assuming owner keystore is present)
   - [ ] Session Keys
     - [ ] Create Session Key
       - [ ] Sudo Policy

@@ -2,6 +2,7 @@ import { Effect } from "effect";
 import { Command } from "effect/unstable/cli";
 
 import { createSmartAccountCommand } from "./create";
+import { importSmartAccountCommand } from "./import";
 import { getSmartAccountInfoCommand } from "./info";
 import { listSmartAccountsCommand } from "./list";
 import { removeSmartAccountCommand } from "./remove";
@@ -23,5 +24,6 @@ export const smartAccountCommands = Command.make(
     getSmartAccountInfoCommand,
     removeSmartAccountCommand,
     getSmartAccountStatus,
+    importSmartAccountCommand,
   ]),
 );

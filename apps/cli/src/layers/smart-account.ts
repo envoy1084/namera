@@ -10,6 +10,7 @@ import {
   type CreateSmartAccountParams,
   type GetSmartAccountParams,
   type GetSmartAccountStatusParams,
+  type ImportSmartAccountParams,
   LocalSmartAccount,
   type LocalSmartAccountData,
   type RemoveSmartAccountParams,
@@ -53,6 +54,13 @@ export type SmartAccountManager = {
   getSmartAccountStatus: (
     params: GetSmartAccountStatusParams,
   ) => Effect.Effect<boolean, ConfigManagerError, never>;
+  importSmartAccount: (
+    params: ImportSmartAccountParams,
+  ) => Effect.Effect<
+    LocalSmartAccountData,
+    SmartAccountManagerError | ConfigManagerError | KeystoreManagerError,
+    never
+  >;
 };
 
 export const SmartAccountManager = ServiceMap.Service<SmartAccountManager>(
@@ -252,6 +260,47 @@ export const layer = Layer.effect(
         return Boolean(code);
       });
 
+    const importSmartAccount = (params: ImportSmartAccountParams) =>
+      Effect.gen(function* () {
+        const { alias, ...rest } = params;
+        const entityPath = yield* configManager.getEntityPath({
+          alias: params.alias,
+          type: "smart-account",
+        });
+
+        const ownerKeystore = yield* keystoreManager.getKeystore({
+          alias: params.ownerAlias,
+        });
+
+        const allAccounts = yield* listSmartAccounts();
+
+        const exists = allAccounts.find(
+          (d) => d.data.smartAccountAddress === rest.smartAccountAddress,
+        );
+
+        if (exists) {
+          return yield* Effect.fail(
+            new SmartAccountManagerError({
+              code: "SmartAccountAlreadyExists",
+              message: `Smart account for owner: ${ownerKeystore.alias} and address: ${rest.smartAccountAddress} already exists`,
+            }),
+          );
+        }
+
+        yield* configManager.storeEntity({
+          alias: params.alias,
+          content: JSON.stringify(rest),
+          path: entityPath,
+          type: "smart-account",
+        });
+
+        return {
+          alias: params.alias,
+          data: rest,
+          path: entityPath,
+        };
+      });
+
     return SmartAccountManager.of({
       createSmartAccount,
       getSmartAccount,
@@ -259,6 +308,7 @@ export const layer = Layer.effect(
       selectSmartAccount,
       removeSmartAccount,
       getSmartAccountStatus,
+      importSmartAccount,
     });
   }),
 );
