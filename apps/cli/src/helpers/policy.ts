@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: safe */
 import {
   CallPolicyVersion,
   CallType,
@@ -89,6 +90,7 @@ export const policyParamsToPolicies = (params: PolicyParams[]) => {
                     args: !p.args
                       ? undefined
                       : p.args.map((a) => {
+                          if (a === null) return null;
                           const c = a.condition;
                           if (c === "ONE_OF") {
                             return {

@@ -1,4 +1,4 @@
-import { Schema } from "effect";
+import { Schema, Struct } from "effect";
 
 import { BigIntFromString, EthereumAddress, Hex } from "./common";
 
@@ -64,6 +64,7 @@ export const CallPolicyVersion = Schema.Literals([
   "0.0.4",
   "0.0.5",
 ]);
+
 export type CallPolicyVersion = typeof CallPolicyVersion.Type;
 
 const CallType = Schema.Literals(["call", "delegatecall", "batch-call"]);
@@ -84,11 +85,15 @@ export type ParamCondition = typeof ParamCondition.Type;
 const ConditionValue = Schema.Union([
   Schema.Struct({
     condition: ParamCondition.pick(["ONE_OF"]),
-    value: Schema.mutable(Schema.Array(Schema.Any)),
+    value: Schema.mutable(Schema.Array(Schema.Any)).annotate({
+      description: "The value of the argument to use with the operator.",
+    }),
   }),
   Schema.Struct({
     condition: ParamCondition.pick(["SLICE_EQUAL"]),
-    value: Schema.Any,
+    value: Schema.Any.annotate({
+      description: "The value of the argument to use with the operator.",
+    }),
     start: Schema.Number,
     length: Schema.Number,
   }),
@@ -102,8 +107,11 @@ const ConditionValue = Schema.Union([
       "NOT_EQUAL",
       "SLICE_EQUAL",
     ]),
-    value: Schema.Any,
+    value: Schema.Any.annotate({
+      description: "The value of the argument to use with the operator.",
+    }),
   }),
+  Schema.Null,
 ]);
 
 const ParamRule = Schema.Struct({
@@ -112,23 +120,44 @@ const ParamRule = Schema.Struct({
   params: Schema.Union([Hex, Schema.mutable(Schema.Array(Hex))]),
 });
 
-const PermissionManual = Schema.Struct({
-  callType: Schema.optional(CallType),
-  target: EthereumAddress,
-  selector: Hex,
-  valueLimit: Schema.optional(BigIntFromString),
+const PermissionCore = Schema.Struct({
+  callType: Schema.optional(CallType)
+    .pipe(Schema.withDecodingDefault(() => "call"))
+    .annotate({
+      description: "The type of call to make",
+      default: "call",
+    }),
+  target: EthereumAddress.annotate({
+    description:
+      "The target contract to call or address to send ETH to. If this is zeroAddress, then the target can be any contract as long as the ABI matches (or it can be any address if no ABI is specified)",
+  }),
+  selector: Schema.optional(Hex).annotate({
+    description: "The function selector if the target is a contract",
+  }),
+  valueLimit: Schema.optional(BigIntFromString).annotate({
+    description: "The maximum value in wei that can be sent to the target",
+  }),
   rules: Schema.optional(Schema.Array(ParamRule)),
 });
 
-const PermissionWithABI = Schema.Struct({
-  callType: Schema.optional(CallType),
-  target: EthereumAddress,
-  selector: Hex,
-  valueLimit: Schema.optional(BigIntFromString),
-  abi: Schema.Any,
-  functionName: Schema.String,
-  args: Schema.optional(Schema.Array(ConditionValue)),
-});
+const PermissionManual = PermissionCore;
+
+const PermissionWithABI = PermissionCore.mapFields(
+  Struct.omit(["rules"]),
+).mapFields(
+  Struct.assign({
+    abi: Schema.mutable(Schema.Array(Schema.Any)).annotate({
+      description: "The ABI of the target contract",
+    }),
+    functionName: Schema.String.annotate({
+      description: "The function name",
+    }),
+    args: Schema.optional(Schema.Array(ConditionValue)).annotate({
+      description:
+        "An array of conditions, each corresponding to an argument, in the order that the arguments are laid out. use null to skip an argument.",
+    }),
+  }),
+);
 
 export const Permission = Schema.Union([PermissionManual, PermissionWithABI]);
 
