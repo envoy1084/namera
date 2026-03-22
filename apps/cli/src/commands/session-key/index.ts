@@ -2,6 +2,7 @@ import { Effect } from "effect";
 import { Command } from "effect/unstable/cli";
 
 import { createSessionKeyCommand } from "./create";
+import { getSessionKeyInfoCommand } from "./info";
 import { listSessionKeysCommand } from "./list";
 
 /**
@@ -14,5 +15,9 @@ export const sessionKeyCommands = Command.make(
 ).pipe(
   Command.withAlias("sk"),
   Command.withDescription("Session Key management commands."),
-  Command.withSubcommands([createSessionKeyCommand, listSessionKeysCommand]),
+  Command.withSubcommands([
+    createSessionKeyCommand,
+    listSessionKeysCommand,
+    getSessionKeyInfoCommand,
+  ]),
 );

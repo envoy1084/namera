@@ -25,7 +25,8 @@ const policyChoices = [
     value: "gas",
   },
   {
-    description: "Specify the allowed gas usage for the session key",
+    description:
+      "Specify which addresses can verify signatures from this session key",
     title: "Signature Permission",
     value: "signature-caller",
   },
@@ -33,6 +34,11 @@ const policyChoices = [
     description: "Specify the allowed gas usage for the session key",
     title: "Rate Limit Permission",
     value: "rate-limit",
+  },
+  {
+    description: "Complete the session key creation",
+    title: "Done",
+    value: "done",
   },
 ] as const;
 

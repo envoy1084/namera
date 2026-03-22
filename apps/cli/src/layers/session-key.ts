@@ -1,6 +1,8 @@
 import { Wallet } from "@ethereumjs/wallet";
 import { createEcdsaSessionKey } from "@namera-ai/core/session-key";
 import { Data, Effect, Layer, Schema, ServiceMap } from "effect";
+import type { QuitError } from "effect/Terminal";
+import type { Prompt } from "effect/unstable/cli";
 import { hexToBytes } from "viem";
 
 import {
@@ -18,6 +20,7 @@ import type {
 } from "../dto/session-key";
 import { ConfigManager, type ConfigManagerError } from "./config";
 import { KeystoreManager, type KeystoreManagerError } from "./keystore";
+import { PromptManager } from "./prompt";
 import { SmartAccountManager } from "./smart-account";
 import { Web3Service } from "./web3";
 
@@ -40,6 +43,13 @@ export type SessionKeyManager = {
     SessionKeyData[],
     ConfigManagerError | SessionKeyManagerError
   >;
+  selectSessionKey: (params: {
+    message: string;
+  }) => Effect.Effect<
+    SessionKeyData,
+    ConfigManagerError | SessionKeyManagerError | QuitError,
+    Prompt.Environment
+  >;
 };
 export const SessionKeyManager = ServiceMap.Service<SessionKeyManager>(
   "@namera-ai/cli/SessionKeyManager",
@@ -56,6 +66,7 @@ export const layer = Layer.effect(
   SessionKeyManager,
   Effect.gen(function* () {
     const configManager = yield* ConfigManager;
+    const promptManager = yield* PromptManager;
     const keystoreManager = yield* KeystoreManager;
     const smartAccountManager = yield* SmartAccountManager;
     const web3Service = yield* Web3Service;
@@ -217,10 +228,27 @@ export const layer = Layer.effect(
         return allKeys;
       });
 
+    const selectSessionKey = (params: { message: string }) =>
+      Effect.gen(function* () {
+        const sessionKeys = yield* listSessionKeys({});
+
+        const res = yield* promptManager.selectPrompt({
+          message: params.message,
+          choices: sessionKeys.map((sk) => ({
+            title: sk.alias,
+            value: sk,
+            description: `${sk.data.sessionKeyAddress} (${sk.data.smartAccountAlias})`,
+          })) satisfies Prompt.SelectChoice<SessionKeyData>[],
+        });
+
+        return res;
+      });
+
     return SessionKeyManager.of({
       createSessionKey,
       getSessionKey,
       listSessionKeys,
+      selectSessionKey,
     });
   }),
 );

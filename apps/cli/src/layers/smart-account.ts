@@ -3,7 +3,12 @@ import { Data, Effect, Layer, Schema, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";
 import type { Environment } from "effect/unstable/cli/Prompt";
-import { createPublicClient, http, type PublicClient } from "viem";
+import {
+  type Address,
+  createPublicClient,
+  http,
+  type PublicClient,
+} from "viem";
 import { mainnet } from "viem/chains";
 
 import {
@@ -197,7 +202,7 @@ export const layer = Layer.effect(
         const kernelVersion = "0.3.2";
         const index = BigInt(params.index ?? 0);
         const ownerType = "ecdsa";
-        const eoaAddress = ownerKeystore.data.address;
+        const eoaAddress = ownerKeystore.data.address as Address;
 
         const saAddress = yield* Effect.tryPromise({
           try: () =>
@@ -255,14 +260,14 @@ export const layer = Layer.effect(
 
     const selectSmartAccount = (params: { message: string }) =>
       Effect.gen(function* () {
-        const keystores = yield* listSmartAccounts();
+        const smartAccounts = yield* listSmartAccounts();
 
         const res = yield* promptManager.selectPrompt({
           message: params.message,
-          choices: keystores.map((k) => ({
-            title: k.alias,
-            value: k,
-            description: k.data.smartAccountAddress,
+          choices: smartAccounts.map((a) => ({
+            title: a.alias,
+            value: a,
+            description: a.data.smartAccountAddress,
           })) satisfies Prompt.SelectChoice<LocalSmartAccountData>[],
         });
 
