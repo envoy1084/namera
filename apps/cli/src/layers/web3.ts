@@ -7,7 +7,6 @@ import {
   createPublicClient,
   type HttpTransport,
   http,
-  type PublicClient,
 } from "viem";
 
 import {
