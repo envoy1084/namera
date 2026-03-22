@@ -49,7 +49,6 @@ export const GasPolicyParams = Schema.Struct({
   amount: Schema.optional(BigIntFromString).annotate({
     description:
       "Amount, in wei that the signer can spend on gas, in total across all UserOps it sends.",
-    default: 0n,
   }),
   enforcePaymaster: Schema.optional(Schema.Boolean).annotate({
     description: "If set to true, enforce that a paymaster must be used.",
@@ -140,9 +139,9 @@ const PermissionCore = Schema.Struct({
   rules: Schema.optional(Schema.Array(ParamRule)),
 });
 
-const PermissionManual = PermissionCore;
+export const PermissionManual = PermissionCore;
 
-const PermissionWithABI = PermissionCore.mapFields(
+export const PermissionWithABI = PermissionCore.mapFields(
   Struct.omit(["rules"]),
 ).mapFields(
   Struct.assign({
@@ -160,6 +159,10 @@ const PermissionWithABI = PermissionCore.mapFields(
 );
 
 export const Permission = Schema.Union([PermissionManual, PermissionWithABI]);
+
+export type PermissionManual = typeof PermissionManual.Type;
+export type PermissionWithABI = typeof PermissionWithABI.Type;
+export type Permission = typeof Permission.Type;
 
 export const CallPolicyParams = Schema.Struct({
   type: Schema.Literal("call"),

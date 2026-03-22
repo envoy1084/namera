@@ -24,6 +24,9 @@ const schemas = {
     status: Dto.GetSmartAccountStatusParams,
     import: Dto.ImportSmartAccountParams,
   },
+  "session-key": {
+    create: Dto.CreateSessionKeyParams,
+  },
 };
 
 const commands = extractPaths(schemas);
@@ -41,6 +44,7 @@ export const schemaCommand = Command.make(
     Effect.gen(function* () {
       const schema = getSchema(schemas, command);
       const json = Schema.toJsonSchemaDocument(schema);
+
       yield* Console.log(JSON.stringify(json, null, 2));
     }),
 ).pipe(Command.withDescription("Get the schema for a command"));

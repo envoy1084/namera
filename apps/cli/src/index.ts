@@ -11,6 +11,7 @@ import {
   KeystoreManager,
   OutputFormatter,
   PromptManager,
+  SessionKeyManager,
   SmartAccountManager,
   Web3Service,
 } from "./layers";
@@ -33,7 +34,8 @@ const command = Command.make("namera", {}, () => Effect.void).pipe(
   ]),
 );
 
-const Layers = SmartAccountManager.layer.pipe(
+const Layers = SessionKeyManager.layer.pipe(
+  Layer.provideMerge(SmartAccountManager.layer),
   Layer.provideMerge(KeystoreManager.layer),
   Layer.provideMerge(Web3Service.layer),
   Layer.provideMerge(PromptManager.layer),

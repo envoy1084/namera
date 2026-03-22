@@ -3,7 +3,7 @@ import { Data, Effect, Layer, Schema, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";
 import type { Environment } from "effect/unstable/cli/Prompt";
-import { createPublicClient, http } from "viem";
+import { createPublicClient, http, type PublicClient } from "viem";
 import { mainnet } from "viem/chains";
 
 import {
@@ -73,7 +73,8 @@ export class SmartAccountManagerError extends Data.TaggedError(
   code:
     | "KernelAddressGenerationError"
     | "SmartAccountAlreadyExists"
-    | "SmartAccountNotFound";
+    | "SmartAccountNotFound"
+    | "SmartAccountImportError";
   message: string;
 }> {}
 
@@ -184,7 +185,7 @@ export const layer = Layer.effect(
           ownerAlias: ownerKeystore.alias,
           ownerType,
           smartAccountAddress: saAddress,
-          index: Number(index),
+          index,
         };
 
         const data: LocalSmartAccountData = {
@@ -246,10 +247,10 @@ export const layer = Layer.effect(
       Effect.gen(function* () {
         const sa = yield* getSmartAccount({ alias: params.alias });
 
-        const publicClient = yield* web3Service.getPublicClient({
+        const publicClient = (yield* web3Service.getPublicClient({
           chain: params.chain,
           rpcUrl: params.rpcUrl,
-        });
+        })) as PublicClient;
 
         const code = yield* Effect.promise(() =>
           publicClient.getCode({

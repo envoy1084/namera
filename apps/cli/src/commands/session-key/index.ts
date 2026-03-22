@@ -1,6 +1,8 @@
 import { Effect } from "effect";
 import { Command } from "effect/unstable/cli";
 
+import { createSessionKeyCommand } from "./create";
+
 /**
  * Command group for session-key related operations.
  */
@@ -11,5 +13,5 @@ export const sessionKeyCommands = Command.make(
 ).pipe(
   Command.withAlias("sk"),
   Command.withDescription("Session Key management commands."),
-  Command.withSubcommands([]),
+  Command.withSubcommands([createSessionKeyCommand]),
 );

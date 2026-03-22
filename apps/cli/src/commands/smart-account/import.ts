@@ -4,6 +4,7 @@ import { Command } from "effect/unstable/cli";
 import { ImportSmartAccountParams } from "@/dto";
 import { getGlobalFlags } from "@/flags/global";
 import { OutputFormatter, SmartAccountManager } from "@/layers";
+import { SmartAccountManagerError } from "@/layers/smart-account";
 
 const handler = () =>
   Effect.gen(function* () {
@@ -14,7 +15,10 @@ const handler = () =>
 
     if (globalFlags.params._tag === "None") {
       return yield* Effect.fail(
-        "Smart Account import is only supported via JSON params",
+        new SmartAccountManagerError({
+          code: "SmartAccountImportError",
+          message: "Smart Account import is only supported via JSON params",
+        }),
       );
     }
 

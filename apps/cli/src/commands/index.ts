@@ -1,5 +1,6 @@
 import { keystoreCommands } from "./keystore";
 import { schemaCommand } from "./schema";
+import { sessionKeyCommands } from "./session-key";
 import { smartAccountCommands } from "./smart-account";
 
 /**
@@ -8,5 +9,6 @@ import { smartAccountCommands } from "./smart-account";
 export const commands = [
   keystoreCommands,
   smartAccountCommands,
+  sessionKeyCommands,
   schemaCommand,
 ] as const;

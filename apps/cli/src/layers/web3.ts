@@ -101,6 +101,7 @@ export const layer = Layer.effect(
             title: c.name,
             value: c.key as SupportedChain,
           })) satisfies Prompt.SelectChoice<SupportedChain>[],
+          min: 1,
         });
 
         return res;
