@@ -50,14 +50,14 @@
   --popover: #181926;
   --popover-foreground: oklch(0.9848 0 0);
 
-  --primary: oklch(0.6257 0.1401 275.0131);
+  --primary: #707fdb;
   --primary-foreground: oklch(1 0 0);
 
   --secondary: oklch(0.2246 0.0161 280.0366);
   --secondary-foreground: oklch(0.9087 0.0181 279.0338);
 
   --muted: #151623;
-  --muted-foreground: oklch(0.705 0.0234 280.7333);
+  --muted-foreground: #9d9faf;
 
   --accent: #151623;
   --accent-foreground: #c9d3ee;

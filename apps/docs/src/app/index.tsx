@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components";
 import { Hero } from "@/sections";
 
-export const Home = () => {
+const Home = () => {
   return (
     <div className="min-h-screen overflow-hidden">
       <Navbar />

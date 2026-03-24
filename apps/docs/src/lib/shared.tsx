@@ -1,5 +1,3 @@
-import { Link } from "@tanstack/react-router";
-
 import { NameraIcon } from "@namera-ai/ui/icons";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
@@ -25,15 +23,10 @@ export const baseOptions = (): BaseLayoutProps => {
       // @ts-expect-error safe
       mode: "top",
       title: (
-        <Link
-          className="text-lg flex flex-row gap-2 items-center px-1 text-[#C9D3EE]"
-          // biome-ignore lint/style/useNamingConvention: safe
-          params={{ _splat: "" }}
-          to="/"
-        >
+        <div className="text-lg flex flex-row gap-2 items-center px-1 text-[#C9D3EE]">
           <NameraIcon className="size-4.5 fill-[#C9D3EE]" />
           <div className="font-normal">Namera</div>
-        </Link>
+        </div>
       ),
       transparentMode: "top",
     },
