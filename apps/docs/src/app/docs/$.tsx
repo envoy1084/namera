@@ -68,7 +68,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <div className="flex flex-row gap-2 items-center border-b pt-2 pb-6">
           <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
           <ViewOptions
-            githubUrl={`https://github.com/${githubDetails.org}/${githubDetails.repo}/blob/main/apps/web/src/docs/${page.path}`}
+            githubUrl={`https://github.com/${githubDetails.org}/${githubDetails.repo}/blob/main/apps/docs/src/docs/${page.path}`}
             markdownUrl={`${page.url}.mdx`}
           />
         </div>
@@ -118,6 +118,7 @@ function Page() {
             },
           },
         }}
+        tabMode="navbar"
         tree={data.pageTree}
       >
         <Suspense>

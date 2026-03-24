@@ -4,21 +4,38 @@ import { NameraIcon } from "@namera-ai/ui/icons";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
 export const githubDetails = {
-  org: "envoy1084",
-  repo: "agent-wallet",
+  org: "thenamespace",
+  repo: "namera",
 };
+
+// import { GithubInfo } from "fumadocs-ui/components/github-info";
 
 export const baseOptions = (): BaseLayoutProps => {
   return {
-    githubUrl: `https://github.com/${githubDetails.org}}/${githubDetails.repo}`,
+    githubUrl: `https://github.com/${githubDetails.org}/${githubDetails.repo}`,
+    links: [
+      // {
+      //   children: (
+      //     <GithubInfo owner={githubDetails.org} repo={githubDetails.repo} />
+      //   ),
+      //   type: "custom",
+      // },
+    ],
     nav: {
+      // @ts-expect-error safe
+      mode: "top",
       title: (
-        <Link className="text-lg flex flex-row gap-2 items-center px-1" to="/">
-          <NameraIcon className="size-5 fill-primary" />
-          <div className="text-secondary-foreground">Namera</div>
+        <Link
+          className="text-lg flex flex-row gap-2 items-center px-1 text-[#C9D3EE]"
+          // biome-ignore lint/style/useNamingConvention: safe
+          params={{ _splat: "" }}
+          to="/"
+        >
+          <NameraIcon className="size-4.5 fill-[#C9D3EE]" />
+          <div className="font-normal">Namera</div>
         </Link>
       ),
-      url: "/dashboard",
+      transparentMode: "top",
     },
     searchToggle: {
       enabled: true,

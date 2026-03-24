@@ -3,5 +3,5 @@
   "icon": "BuildingIcon",
   "pages": ["---Introduction---", "index", "what-is-namera", "..."],
   "root": true,
-  "title": "Framework"
+  "title": "Protocol"
 }

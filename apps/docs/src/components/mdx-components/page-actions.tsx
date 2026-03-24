@@ -224,10 +224,10 @@ export function ViewOptions({
         Open
         <ChevronDown className="size-3.5 text-fd-muted-foreground" />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col">
+      <PopoverContent className="flex flex-col p-2 shadow-none">
         {items.map((item) => (
           <a
-            className="text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4"
+            className="text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-neutral-200 hover:bg-[#727DA1]/15 [&_svg]:size-4"
             href={item.href}
             key={item.href}
             rel="noreferrer noopener"

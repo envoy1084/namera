@@ -28,9 +28,7 @@ const config = defineConfig({
         semicolons: true,
       },
     }),
-    nitro({
-      preset: "bun",
-    }),
+    nitro(),
     viteReact(),
   ],
   server: { port: 4000 },

@@ -1,5 +1,6 @@
 import * as twoslash from "fumadocs-twoslash/ui";
 import * as accordionComponents from "fumadocs-ui/components/accordion";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import * as stepComponents from "fumadocs-ui/components/steps";
 import * as tabsComponents from "fumadocs-ui/components/tabs";
@@ -20,5 +21,10 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...twoslash,
     ...components,
     img: (props) => <ImageZoom {...props} />,
+    pre: ({ ref: _ref, ...props }) => (
+      <CodeBlock {...props} className="shadow-none">
+        <Pre className="text-[15px] font-jetbrainsMono">{props.children}</Pre>
+      </CodeBlock>
+    ),
   };
 }

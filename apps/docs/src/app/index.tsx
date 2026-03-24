@@ -1,15 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
-import { Button } from "@namera-ai/ui/components/ui/button";
+import { Navbar } from "@/components";
+import { Hero } from "@/sections";
 
 export const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
-      <Link params={{}} to="/docs/$">
-        Docs
-      </Link>
-      <Button>Button</Button>
+    <div className="min-h-screen overflow-hidden">
+      <Navbar />
+      <Hero />
     </div>
   );
 };

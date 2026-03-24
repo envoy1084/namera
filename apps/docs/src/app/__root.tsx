@@ -7,6 +7,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import { SvgDefs } from "@/components/misc";
 import { ProviderTree } from "@/providers";
 import appCss from "@/styles/globals.css?url";
 
@@ -28,6 +29,7 @@ function RootComponent() {
   return (
     <RootDocument>
       <ProviderTree>
+        <SvgDefs />
         <Outlet />
       </ProviderTree>
     </RootDocument>

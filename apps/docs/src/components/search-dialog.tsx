@@ -72,7 +72,7 @@ export const CustomSearchDialog = (props: SharedProps) => {
       {...props}
     >
       <SearchDialogOverlay />
-      <SearchDialogContent>
+      <SearchDialogContent className="bg-card">
         <SearchDialogHeader>
           <SearchDialogIcon />
           <SearchDialogInput />
@@ -85,14 +85,17 @@ export const CustomSearchDialog = (props: SharedProps) => {
               className={buttonVariants({
                 className: "-m-1.5 me-auto",
                 size: "sm",
-                variant: "ghost",
+                variant: "outline",
               })}
             >
               <span className="text-fd-muted-foreground/80 me-2">Filter</span>
               {items.find((item) => item.value === tag)?.name}
               <ChevronDown className="size-3.5 text-fd-muted-foreground" />
             </PopoverTrigger>
-            <PopoverContent align="start" className="flex flex-col p-1 gap-1">
+            <PopoverContent
+              align="start"
+              className="flex flex-col p-1 gap-1 bg-popover"
+            >
               {items.map((item, i) => {
                 const isSelected = item.value === tag;
 
@@ -102,7 +105,7 @@ export const CustomSearchDialog = (props: SharedProps) => {
                       "rounded-lg text-start px-2 py-1.5",
                       isSelected
                         ? "text-fd-primary bg-fd-primary/10"
-                        : "hover:text-fd-accent-foreground hover:bg-fd-accent",
+                        : "hover:bg-[#727DA1]/15",
                     )}
                     key={i.toString()}
                     onClick={(e) => {
