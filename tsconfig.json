@@ -6,5 +6,6 @@
         "name": "@effect/language-service"
       }
     ]
-  }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.mjs"]
 }

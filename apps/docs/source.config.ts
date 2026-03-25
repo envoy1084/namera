@@ -21,10 +21,10 @@ export const docs = defineDocs({
 export default defineConfig({
   mdxOptions: {
     rehypeCodeOptions: {
-      langs: ["js", "jsx", "ts", "tsx"],
+      langs: ["js", "jsx", "ts", "tsx", "json", "bash"],
       themes: {
-        dark: "github-dark",
-        light: "github-light",
+        dark: "one-dark-pro",
+        light: "github-light-default",
       },
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),

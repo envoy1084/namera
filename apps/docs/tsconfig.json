@@ -10,6 +10,6 @@
     "types": ["vite/client"]
   },
   "extends": "@namera-ai/config/tsconfig/app/vite",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "content/cli/transaction-execution.mdx"],
   "references": []
 }

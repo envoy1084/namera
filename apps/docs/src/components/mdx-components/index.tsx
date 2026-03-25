@@ -23,7 +23,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     img: (props) => <ImageZoom {...props} />,
     pre: ({ ref: _ref, ...props }) => (
       <CodeBlock {...props} className="shadow-none">
-        <Pre className="text-[15px] font-jetbrainsMono">{props.children}</Pre>
+        <Pre className="text-sm] font-geist-mono">{props.children}</Pre>
       </CodeBlock>
     ),
   };
