@@ -21,10 +21,10 @@ export const BlogHero = () => {
   return (
     <div className="relative pt-12">
       <div className="absolute top-2/7 translate-x-1/2 right-1/2 flex flex-col gap-6 items-center w-full px-4">
-        <h1 className="text-7xl font-helveticaDisplay heading-gradient pb-2">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-helveticaDisplay heading-gradient pb-2">
           Blog
         </h1>
-        <p className="font-normal text-accent-foreground text-lg">
+        <p className="font-normal text-accent-foreground text-base text-center sm:text-lg">
           Explore the latest updates and insights from the Namera team.
         </p>
         <InputGroup className="h-12 max-w-sm w-full">

@@ -68,7 +68,7 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 const clientLoader = browserCollections.blog.createClientLoader({
-  component({ toc, frontmatter, default: MDX }, metadata: BlogMetadata) {
+  component({ toc, default: MDX }, metadata: BlogMetadata) {
     return (
       <DocsBody>
         <article itemScope={true} itemType="https://schema.org/BlogPosting">

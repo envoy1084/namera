@@ -8,8 +8,11 @@ export const BlogHeader = ({
 }: BlogMetadata) => {
   return (
     <header className="relative pt-12">
-      <div className="absolute top-2/7 translate-x-1/2 right-1/2 flex flex-col gap-6 items-center w-full px-4">
-        <h1 className="text-7xl heading-gradient pb-2" itemProp="headline">
+      <div className="absolute top-3/7 translate-x-1/2 right-1/2 flex flex-col gap-6 items-center w-full px-4">
+        <h1
+          className="text-4xl sm:text-6xl md:text-7xl heading-gradient pb-2 text-center"
+          itemProp="headline"
+        >
           {title}
         </h1>
       </div>
@@ -34,7 +37,7 @@ export const BlogHeader = ({
       </div>
       <img
         alt="Blog Hero"
-        className="w-full h-[30dvh]"
+        className="w-full h-[25dvh] sm:h-[30dvh]"
         src="/assets/crescent-bottom.png"
       />
     </header>

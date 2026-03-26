@@ -73,6 +73,7 @@ export const generateBlogSeo = (metadata: BlogMetadata) => {
             },
             name: "Namera",
           },
+          wordCount: metadata.readingTime.words,
         }),
         type: "application/ld+json",
       },
