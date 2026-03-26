@@ -17,7 +17,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       <head>
         <HeadContent />
       </head>
-      <body suppressHydrationWarning={true}>
+      <body className="min-h-screen" suppressHydrationWarning={true}>
         <div className="root">{children}</div>
         <Scripts />
       </body>

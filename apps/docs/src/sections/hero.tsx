@@ -3,7 +3,7 @@ import { Input } from "@namera-ai/ui/components/ui/input";
 
 export const Hero = () => {
   return (
-    <section className="relative mx-auto">
+    <section className="relative mx-auto pb-48">
       <div
         className="w-full mx-auto text-center container px-2"
         style={{
@@ -37,11 +37,11 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center relative mt-16">
+      <div className="flex justify-center relative my-16">
         <img
           alt="Hero"
           className="absolute hidden md:block max-w-none"
-          height={679}
+          height={500}
           src="/assets/hero-md.jpg"
           width={1750}
         />
@@ -52,8 +52,11 @@ export const Hero = () => {
           src="/assets/hero-sm.jpg"
           width={800}
         />
-        <div className="z-10 aspect-video max-w-216 w-full border bg-muted rounded-2xl p-2 relative mx-4">
-          <div className="w-full aspect-video border rounded-xl bg-background" />
+        <div className="z-10 aspect-video max-w-216 w-full relative mx-4">
+          <img
+            alt="Namera Agent executing transactions"
+            src="/assets/hero.png"
+          />
         </div>
       </div>
     </section>

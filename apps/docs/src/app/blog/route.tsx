@@ -1,12 +1,13 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { Navbar } from "@/components";
+import { Footer, Navbar } from "@/components";
 
 const BlogLayout = () => {
   return (
     <div>
       <Navbar />
       <Outlet />
+      <Footer />
     </div>
   );
 };
