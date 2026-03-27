@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Footer, Navbar } from "@/components";
-import { Hero, HowItWorks } from "@/sections";
+import { Hr } from "@/components/misc";
+import { Hero, HowItWorks, UseCases } from "@/sections";
 import { Products } from "@/sections/products";
 
 const Home = () => {
@@ -9,8 +10,13 @@ const Home = () => {
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />
       <Hero />
+      <Hr />
       <Products />
+      <Hr />
       <HowItWorks />
+      <Hr />
+      <UseCases />
+      <Hr />
       <div className="h-screen" />
       <Footer />
     </div>

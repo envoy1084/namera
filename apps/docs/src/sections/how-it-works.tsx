@@ -8,8 +8,6 @@ import {
   WalletIcon,
 } from "@phosphor-icons/react";
 
-import { Hr } from "@/components/misc";
-
 type Step = {
   description: string;
   icon: (props: SVGProps<SVGSVGElement>) => ReactNode;
@@ -46,55 +44,51 @@ const onchainStep = {
 
 export const HowItWorks = () => {
   return (
-    <>
-      <Hr />
-      <section
-        className="px-4 max-w-7xl mx-auto my-24 flex flex-col gap-12"
-        id="how-it-works"
-      >
-        <div className="flex flex-col gap-2">
-          <h2 className="font-helveticaDisplay text-3xl sm:text-4xl heading-gradient text-center pb-2">
-            How Namera powers
-            <br />
-            agent wallets
-          </h2>
-          <p className="text-center max-w-sm mx-auto text-neutral-200">
-            From setup to execution, everything needed to run autonomous wallet
-            systems
-          </p>
-        </div>
-        <div className="flex flex-row gap-4 justify-between relative">
-          <StepCard
-            className="lg:flex absolute top-0 left-0 hidden"
-            step={createStep}
-          />
-          <StepCard
-            className="lg:flex absolute hidden top-1/2 left-0"
-            step={sessionKeyStep}
-          />
-          <StepCard
-            className="lg:flex absolute hidden top-0 right-0"
-            step={mcpStep}
-          />
-          <StepCard
-            className="lg:flex absolute hidden top-1/2 right-0"
-            step={onchainStep}
-          />
-          <img
-            alt=""
-            className="max-w-6xl w-full aspect-video mx-auto"
-            src="/assets/how-it-works.png"
-          />
-        </div>
-        <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 borer place-items-center">
-          <StepCard step={createStep} />
-          <StepCard step={sessionKeyStep} />
-          <StepCard step={mcpStep} />
-          <StepCard step={onchainStep} />
-        </div>
-      </section>
-      <Hr />
-    </>
+    <section
+      className="px-4 max-w-7xl mx-auto my-24 flex flex-col gap-12"
+      id="how-it-works"
+    >
+      <div className="flex flex-col gap-2">
+        <h2 className="font-helveticaDisplay text-3xl sm:text-4xl heading-gradient text-center pb-2">
+          How Namera powers
+          <br />
+          agent wallets
+        </h2>
+        <p className="text-center max-w-sm mx-auto text-neutral-200">
+          From setup to execution, everything needed to run autonomous wallet
+          systems
+        </p>
+      </div>
+      <div className="flex flex-row gap-4 justify-between relative">
+        <StepCard
+          className="lg:flex absolute top-0 left-0 hidden"
+          step={createStep}
+        />
+        <StepCard
+          className="lg:flex absolute hidden top-1/2 left-0"
+          step={sessionKeyStep}
+        />
+        <StepCard
+          className="lg:flex absolute hidden top-0 right-0"
+          step={mcpStep}
+        />
+        <StepCard
+          className="lg:flex absolute hidden top-1/2 right-0"
+          step={onchainStep}
+        />
+        <img
+          alt=""
+          className="max-w-6xl w-full aspect-video mx-auto"
+          src="/assets/how-it-works.png"
+        />
+      </div>
+      <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 borer place-items-center">
+        <StepCard step={createStep} />
+        <StepCard step={sessionKeyStep} />
+        <StepCard step={mcpStep} />
+        <StepCard step={onchainStep} />
+      </div>
+    </section>
   );
 };
 

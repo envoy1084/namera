@@ -1,5 +1,3 @@
-import { Hr } from "@/components/misc";
-
 const products = [
   {
     tagline:
@@ -37,25 +35,21 @@ type Product = (typeof products)[number];
 
 export const Products = () => {
   return (
-    <>
-      <Hr />
-      <section
-        className="px-4 max-w-6xl mx-auto my-24 flex flex-col gap-12"
-        id="products"
-      >
-        <h2 className="font-helveticaDisplay text-3xl sm:text-4xl heading-gradient text-center pb-2">
-          Everything you need to
-          <br />
-          build agent wallets
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.title} {...product} />
-          ))}
-        </div>
-      </section>
-      <Hr />
-    </>
+    <section
+      className="px-4 max-w-6xl mx-auto my-24 flex flex-col gap-12"
+      id="products"
+    >
+      <h2 className="font-helveticaDisplay text-3xl sm:text-4xl heading-gradient text-center pb-2">
+        Everything you need to
+        <br />
+        build agent wallets
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <ProductCard key={product.title} {...product} />
+        ))}
+      </div>
+    </section>
   );
 };
 
