@@ -69,10 +69,10 @@
     - [x] Tools
       - [x] Account Tools
         - [x] `get_wallet_address`
-        - [ ] `get_balance`
+        - [x] `get_balance`
         - [ ] `get_token_balance`
       - [ ] Transfer Tools
-        - [ ] `native_transfer`
+        - [x] `native_transfer`
         - [ ] `erc20_transfer`
       - [ ] Transaction Tools
         - [ ] `execute_transaction`
