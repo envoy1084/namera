@@ -1,6 +1,5 @@
 import {
   rehypeCodeDefaultOptions,
-  remarkCodeTab,
   remarkMdxFiles,
   remarkMdxMermaid,
 } from "fumadocs-core/mdx-plugins";
