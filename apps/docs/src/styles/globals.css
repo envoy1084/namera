@@ -3,3 +3,18 @@
 @import "fumadocs-ui/css/preset.css";
 @import "fumadocs-twoslash/twoslash.css";
 @import "katex/dist/katex.css";
+
+pre:has(.line.focused) .line {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+/* 2. Focused lines stay bright */
+pre:has(.line.focused) .line.focused {
+  opacity: 1;
+}
+
+/* 3. On hover → restore all lines */
+pre:has(.line.focused):hover .line {
+  opacity: 1;
+}

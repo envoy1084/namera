@@ -1,4 +1,4 @@
-import { createEcdsaAccountClient } from "@namera-ai/core/account";
+import { createEcdsaAccountClient } from "@namera-ai/sdk/account";
 import { Data, Effect, Layer, Schema, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";

@@ -10,7 +10,7 @@ import {
   toSignatureCallerPolicy,
   toSudoPolicy,
   toTimestampPolicy,
-} from "@namera-ai/core/policy";
+} from "@namera-ai/sdk/policy";
 
 import type { CallPolicyParams, PolicyParams } from "@/schema";
 import type { ParamCondition } from "@/schema/policy";

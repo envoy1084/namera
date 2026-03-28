@@ -2,7 +2,7 @@ import { Wallet } from "@ethereumjs/wallet";
 import {
   createEcdsaSessionKey,
   isSessionKeyInstalled,
-} from "@namera-ai/core/session-key";
+} from "@namera-ai/sdk/session-key";
 import { Data, Effect, Layer, type Redacted, Schema, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";

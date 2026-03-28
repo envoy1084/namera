@@ -1,4 +1,31 @@
 ---
 title: Introduction
+description: Create and manage smart accounts in Namera
 ---
 
+Smart accounts replace the traditional “private key = control” model with programmable, contract-based accounts that define how execution happens—not just who signs. Instead of relying on a single EOA signature, a smart account validates and executes transactions through onchain logic, enabling policy enforcement, modular auth, and deterministic execution flows.
+
+## Why Namera Uses Smart Accounts
+
+Namera is built on top of ZeroDev smart accounts and its plugin system. We chose ZeroDev because it is battle-tested, actively maintained, and deeply aligned with the evolving account abstraction ecosystem. Instead of building a custom wallet stack, we leverage ZeroDev's contracts and extend them with agent-focused primitives.
+
+## What You Can Do with ZeroDev Smart Accounts
+
+ZeroDev exposes a modular smart account architecture that lets you compose advanced wallet behaviors without rebuilding core logic. Through plugins and validation modules, you can extend how accounts authenticate, authorize, and execute transactions.
+
+With this setup, you can:
+
+- Enable session keys to delegate scoped permissions to agents without exposing the primary signer
+- Support passkeys (WebAuthn) for secure, password-less authentication flows
+- Construct multisig accounts with flexible threshold and signer configurations
+- Add guardians and recovery mechanisms for account safety and social recovery
+- Execute batched and parallel transactions with fine-grained nonce control
+- Operate across chains with multi-chain signing and execution patterns
+
+## Smart Accounts in Namera
+
+For now we support the following smart accounts:
+
+- [ECDSA](/docs/sdk/smart-accounts/create)
+
+we have plans to support more like WebAuth, Multi-sig smart accounts in the future.

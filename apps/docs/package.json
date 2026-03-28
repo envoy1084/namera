@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@namera-ai/core": "workspace:*",
+    "@namera-ai/sdk": "workspace:*",
     "@namera-ai/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@react-three/drei": "^10.7.7",
@@ -26,7 +26,9 @@
     "mermaid": "^11.13.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "rehype-code-group": "^0.3.1",
     "rehype-katex": "^7.0.1",
+    "remark-directive": "^4.0.0",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.2.2",
     "three": "^0.183.2",

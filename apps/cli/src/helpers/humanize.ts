@@ -1,4 +1,4 @@
-import { deserializePermissionAccountParams } from "@namera-ai/core/session-key";
+import { deserializePermissionAccountParams } from "@namera-ai/sdk/session-key";
 import { Duration } from "effect";
 import { type AbiFunction, formatEther, zeroAddress } from "viem";
 

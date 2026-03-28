@@ -4,11 +4,11 @@ import type {
   Policy,
   SignatureCallerPolicyParams,
   TimestampPolicyParams,
-} from "@namera-ai/core/policy";
+} from "@namera-ai/sdk/policy";
 import {
   createEcdsaSessionKeyClient,
   deserializePermissionAccountParams,
-} from "@namera-ai/core/session-key";
+} from "@namera-ai/sdk/session-key";
 import { Effect } from "effect";
 
 import type { SessionKeyData } from "@/dto";

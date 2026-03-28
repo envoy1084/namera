@@ -1,5 +1,6 @@
 import {
   rehypeCodeDefaultOptions,
+  remarkCodeTab,
   remarkMdxFiles,
   remarkMdxMermaid,
 } from "fumadocs-core/mdx-plugins";
@@ -37,6 +38,7 @@ export const blog = defineDocs({
 export default defineConfig({
   mdxOptions: {
     rehypeCodeOptions: {
+      inline: "tailing-curly-colon",
       langs: ["js", "jsx", "ts", "tsx", "json", "bash"],
       themes: {
         dark: "one-dark-pro",

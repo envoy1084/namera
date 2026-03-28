@@ -5,7 +5,7 @@ import type {
   SignatureCallerPolicyParams,
   SudoPolicyParams,
   TimestampPolicyParams,
-} from "@namera-ai/core/policy";
+} from "@namera-ai/sdk/policy";
 import type { Address, Hex } from "viem";
 
 export type Intent = "sign" | "transaction" | "read";

@@ -76,7 +76,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <div className="flex flex-row gap-2 items-center border-b pt-2 pb-4">
           <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
           <ViewOptions
-            githubUrl={`https://github.com/${githubDetails.org}/${githubDetails.repo}/blob/main/apps/docs/src/docs/${page.path}`}
+            githubUrl={`https://github.com/${githubDetails.org}/${githubDetails.repo}/blob/main/apps/docs/content/docs/${page.path}`}
             markdownUrl={`${page.url}.mdx`}
           />
         </div>
