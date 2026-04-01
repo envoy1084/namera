@@ -1,52 +1,29 @@
-import { toMultiChainECDSAValidator } from "@zerodev/multi-chain-ecdsa-validator";
+import { deserializePermissionAccount } from "@zerodev/permissions";
+import { toECDSASigner } from "@zerodev/permissions/signers";
 import {
-  createKernelAccount,
   createKernelAccountClient,
   type KernelAccountClient,
 } from "@zerodev/sdk";
 import { getEntryPoint } from "@zerodev/sdk/constants";
-import type { GetKernelVersion, Signer } from "@zerodev/sdk/types";
 import type {
   Chain,
   Client,
   EntryPointVersion,
-  JsonRpcAccount,
-  LocalAccount,
   RpcSchema,
   Transport,
 } from "viem";
 import type {
   GetPaymasterDataParameters,
   GetPaymasterStubDataParameters,
-  PaymasterClient,
   SmartAccount,
 } from "viem/account-abstraction";
 
-export type CreateMultiChainEcdsaAccountClientParams<
-  TClientTransport extends Transport = Transport,
-  TBundlerTransport extends Transport = Transport,
-  TPaymasterTransport extends Transport = Transport,
-  TChain extends Chain = Chain,
-  TRpcSchema extends RpcSchema | undefined = undefined,
-  TEntrypointVersion extends EntryPointVersion = EntryPointVersion,
-  TKernelVersion extends
-    GetKernelVersion<TEntrypointVersion> = GetKernelVersion<TEntrypointVersion>,
-> = {
-  signer: Signer;
-  client: Client<
-    TClientTransport,
-    TChain,
-    JsonRpcAccount | LocalAccount | undefined
-  >;
-  chain: TChain;
-  bundlerTransport: TBundlerTransport;
-  paymaster?: PaymasterClient<TPaymasterTransport, TRpcSchema>;
-  index?: bigint;
-  entrypointVersion: TEntrypointVersion;
-  kernelVersion: TKernelVersion;
-};
+import type { GetKernelVersion } from "@/types";
 
-export const createMultiChainEcdsaAccountClient = async <
+import type { CreateSessionKeyClientParams, SessionKeyType } from "./types";
+
+export const createSessionKeyClient = async <
+  TSessionKeyType extends SessionKeyType,
   TClientTransport extends Transport,
   TBundlerTransport extends Transport,
   TPaymasterTransport extends Transport,
@@ -55,7 +32,8 @@ export const createMultiChainEcdsaAccountClient = async <
   TEntrypointVersion extends EntryPointVersion,
   TKernelVersion extends GetKernelVersion<TEntrypointVersion>,
 >(
-  params: CreateMultiChainEcdsaAccountClientParams<
+  params: CreateSessionKeyClientParams<
+    TSessionKeyType,
     TClientTransport,
     TBundlerTransport,
     TPaymasterTransport,
@@ -74,32 +52,29 @@ export const createMultiChainEcdsaAccountClient = async <
   >
 > => {
   const {
-    signer,
+    sessionKeySigner,
     client,
-    chain,
+    serializedAccount,
     bundlerTransport,
     paymaster: Paymaster,
-    index,
-    kernelVersion,
+    chain,
     entrypointVersion,
+    kernelVersion,
   } = params;
 
   const entryPoint = getEntryPoint(entrypointVersion);
 
-  const validator = await toMultiChainECDSAValidator(client, {
-    entryPoint,
-    kernelVersion: kernelVersion,
-    signer,
+  const sessionSigner = await toECDSASigner({
+    signer: sessionKeySigner,
   });
 
-  const account = await createKernelAccount(client, {
+  const sessionKeyAccount = await deserializePermissionAccount(
+    client,
     entryPoint,
-    index,
     kernelVersion,
-    plugins: {
-      sudo: validator,
-    },
-  });
+    serializedAccount,
+    sessionSigner,
+  );
 
   const paymaster = Paymaster
     ? {
@@ -113,15 +88,13 @@ export const createMultiChainEcdsaAccountClient = async <
     : undefined;
 
   const kernelClient = createKernelAccountClient({
-    account,
+    account: sessionKeyAccount,
     bundlerTransport,
     chain,
     client,
     name: "Namera Account Client",
     paymaster,
   });
-
-  kernelClient;
 
   return kernelClient;
 };

@@ -70,17 +70,13 @@
       - [x] Account Tools
         - [x] `get_wallet_address`
         - [x] `get_balance`
-        - [ ] `get_token_balance`
+      - [ ] Read Operations
+        - [ ] 
       - [ ] Transfer Tools
         - [x] `native_transfer`
         - [ ] `erc20_transfer`
       - [ ] Transaction Tools
         - [ ] `execute_transaction`
         - [ ] `execute_batch`
-        - [ ] `simulate_transaction`
-        - [ ] `simulate_batch`
-      - [ ] Token Utilities
-        - [ ] `get_allowance`
-        - [ ] `approve_erc20`
 - [ ] Audit Code
 

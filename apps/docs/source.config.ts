@@ -1,5 +1,6 @@
 import {
   rehypeCodeDefaultOptions,
+  remarkDirectiveAdmonition,
   remarkMdxFiles,
   remarkMdxMermaid,
 } from "fumadocs-core/mdx-plugins";
@@ -8,6 +9,7 @@ import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import lastModified from "fumadocs-mdx/plugins/last-modified";
 import { transformerTwoslash } from "fumadocs-twoslash";
 import rehypeKatex from "rehype-katex";
+import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
 import z from "zod";
 
@@ -52,7 +54,13 @@ export default defineConfig({
     remarkNpmOptions: {
       persist: { id: "package-manager" },
     },
-    remarkPlugins: [remarkMdxMermaid, remarkMdxFiles, remarkMath],
+    remarkPlugins: [
+      remarkDirective,
+      remarkDirectiveAdmonition,
+      remarkMdxMermaid,
+      remarkMdxFiles,
+      remarkMath,
+    ],
   },
   plugins: [
     lastModified({

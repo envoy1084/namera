@@ -8,18 +8,20 @@ import {
   serializePermissionAccount,
   toPermissionValidator,
 } from "@zerodev/permissions";
-import { toECDSASigner } from "@zerodev/permissions/signers";
-import { addressToEmptyAccount, createKernelAccount } from "@zerodev/sdk";
+import {
+  toWebAuthnSigner,
+  WebAuthnSignerVersion,
+} from "@zerodev/permissions/signers";
+import { createKernelAccount } from "@zerodev/sdk";
 import { getEntryPoint } from "@zerodev/sdk/constants";
-import type { EntryPointVersion } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import type { Chain, Client, EntryPointVersion, Transport } from "viem";
 
 import type { AccountType } from "@/account";
 import type { GetKernelVersion } from "@/types";
 
 import type { CreateSessionKeyParams, CreateSessionKeyResult } from "../types";
 
-export const createEcdsaSessionKey = async <
+export const createPasskeySessionKey = async <
   TEntrypointVersion extends EntryPointVersion = EntryPointVersion,
   TKernelVersion extends
     GetKernelVersion<TEntrypointVersion> = GetKernelVersion<TEntrypointVersion>,
@@ -28,44 +30,36 @@ export const createEcdsaSessionKey = async <
   params: CreateSessionKeyParams<
     TEntrypointVersion,
     TKernelVersion,
-    "ecdsa",
+    "passkey",
     TAccountType
   >,
 ): Promise<CreateSessionKeyResult> => {
-  const {
-    sessionPrivateKey,
-    clients,
-    index,
-    policies,
-    kernelVersion,
-    entrypointVersion,
-  } = params;
+  const { clients, index, policies, kernelVersion, entrypointVersion } = params;
   const entryPoint = getEntryPoint(entrypointVersion);
 
   if (clients.length === 0) {
     throw new Error("At least 1 client is required");
   }
 
-  const sessionKeyAccount = privateKeyToAccount(sessionPrivateKey);
-  const sessionKeyAddress = sessionKeyAccount.address;
-
-  const emptyAccount = addressToEmptyAccount(sessionKeyAddress);
-
-  const emptySessionKeySigner = await toECDSASigner({
-    signer: emptyAccount,
-  });
-
-  // Create a ECDSA Session Key for a ECDSA Validator Smart Account
-  if (params.type === "ecdsa") {
-    const { signer } = params as CreateSessionKeyParams<
+  // Create a Passkey Session Key for a ECDSA Validator Smart Account
+  if (params.accountType === "ecdsa") {
+    const { signer, webAuthnSessionKey } = params as CreateSessionKeyParams<
       TEntrypointVersion,
       TKernelVersion,
-      "ecdsa",
+      "passkey",
       "ecdsa"
     >;
 
     const accounts = await Promise.all(
       clients.map(async (client) => {
+        const webAuthnSigner = await toWebAuthnSigner(
+          client as Client<Transport, Chain, undefined>,
+          {
+            webAuthnKey: webAuthnSessionKey,
+            webAuthnSignerVersion: WebAuthnSignerVersion.V0_0_4_PATCHED,
+          },
+        );
+
         const multichainValidator = await toMultiChainECDSAValidator(client, {
           entryPoint,
           kernelVersion: kernelVersion,
@@ -75,8 +69,8 @@ export const createEcdsaSessionKey = async <
         const permissionPlugin = await toPermissionValidator(client, {
           entryPoint,
           kernelVersion,
-          policies,
-          signer: emptySessionKeySigner,
+          policies: policies,
+          signer: webAuthnSigner,
         });
 
         const kernelAccount = await createKernelAccount(client, {
@@ -117,18 +111,27 @@ export const createEcdsaSessionKey = async <
     };
     return result;
   }
-  // Create a ECDSA Session Key for a Passkey Validator Smart Account
+  // Create a Passkey Session Key for a Passkey Validator Smart Account
   // Note: for multiple chains it will prompt the user to sign multiple times, once for each chain, since the passkey validator is not multi-chain and requires a separate approval for each chain
   if (params.accountType === "passkey") {
-    const { webAuthnKey } = params as CreateSessionKeyParams<
-      TEntrypointVersion,
-      TKernelVersion,
-      "ecdsa",
-      "passkey"
-    >;
+    const { webAuthnKey, webAuthnSessionKey } =
+      params as CreateSessionKeyParams<
+        TEntrypointVersion,
+        TKernelVersion,
+        "passkey",
+        "passkey"
+      >;
 
     const serializedAccounts = await Promise.all(
       clients.map(async (client) => {
+        const webAuthnSigner = await toWebAuthnSigner(
+          client as Client<Transport, Chain, undefined>,
+          {
+            webAuthnKey: webAuthnSessionKey,
+            webAuthnSignerVersion: WebAuthnSignerVersion.V0_0_4_PATCHED,
+          },
+        );
+
         const passkeyValidator = await toPasskeyValidator(client, {
           entryPoint,
           kernelVersion,
@@ -140,8 +143,8 @@ export const createEcdsaSessionKey = async <
         const permissionPlugin = await toPermissionValidator(client, {
           entryPoint,
           kernelVersion,
-          policies,
-          signer: emptySessionKeySigner,
+          policies: policies,
+          signer: webAuthnSigner,
         });
 
         const sessionKeyAccount = await createKernelAccount(client, {
@@ -172,5 +175,5 @@ export const createEcdsaSessionKey = async <
     return result;
   }
 
-  throw new Error("Unsupported session key type");
+  throw new Error("Unsupported account type");
 };
