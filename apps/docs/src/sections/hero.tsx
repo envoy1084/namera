@@ -38,23 +38,26 @@ export const Hero = () => {
       </div>
       <div className="flex justify-center relative my-16">
         <img
-          alt="Hero"
+          alt="Namera Hero Background"
           className="absolute hidden md:block max-w-none"
           height={500}
           src="/assets/hero-md.jpg"
+          title="Namera Hero Background"
           width={1750}
         />
         <img
-          alt="Hero"
+          alt="Namera Hero Background"
           className="absolute block md:hidden max-w-none"
           height={400}
           src="/assets/hero-sm.jpg"
+          title="Namera Hero Background"
           width={800}
         />
         <div className="z-10 aspect-video max-w-216 w-full relative mx-4">
           <img
             alt="Namera Agent executing transactions"
             src="/assets/hero.png"
+            title="Namera Agent executing transactions"
           />
         </div>
       </div>

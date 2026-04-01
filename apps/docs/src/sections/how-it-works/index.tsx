@@ -77,9 +77,10 @@ export const HowItWorks = () => {
           step={onchainStep}
         />
         <img
-          alt=""
+          alt="Diagram showcasing how Namera works"
           className="max-w-6xl w-full aspect-video mx-auto"
           src="/assets/how-it-works.png"
+          title="Diagram showcasing how Namera works"
         />
       </div>
       <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 borer place-items-center">

@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@namera-ai/ui/components/ui/accordion";
 
-const faqs = [
+export const faqs = [
   {
     answer:
       "Namera is a programmable wallet layer that enables agents to securely interact with smart wallets using scoped access and defined execution rules",
