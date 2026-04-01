@@ -65,6 +65,5 @@ export const createAccountClient = async <
 };
 
 export * from "./ecdsa";
-export * from "./multisig";
 export * from "./passkey";
 export * from "./types";

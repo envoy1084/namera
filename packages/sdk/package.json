@@ -32,6 +32,10 @@
       "import": "./dist/session-key.js",
       "types": "./dist/session-key.d.ts"
     },
+    "./transaction": {
+      "import": "./dist/transaction.js",
+      "types": "./dist/transaction.d.ts"
+    },
     "./types": {
       "import": "./dist/types.js",
       "types": "./dist/types.d.ts"

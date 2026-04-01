@@ -6,6 +6,7 @@ const config: UserConfig = createTsdownConfig({
     account: "./src/account/index.ts",
     policy: "./src/policy/index.ts",
     "session-key": "./src/session-key/index.ts",
+    transaction: "./src/transaction/index.ts",
     types: "./src/types/index.ts",
   },
   platform: "neutral",

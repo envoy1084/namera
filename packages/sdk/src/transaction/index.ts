@@ -23,24 +23,28 @@ export type Batch = {
 
 export type ExecuteTransactionParams = {
   batches: Batch[];
+  clients: BaseKernelAccountClient[];
 };
 
+export type ExecuteTransactionResult = (UserOperationReceipt | null)[];
+
 export const executeTransaction = async (
-  _clients: BaseKernelAccountClient[],
-  _params: ExecuteTransactionParams,
-): Promise<(UserOperationReceipt | null)[]> => {
-  // Case 1: One batch, use normal client.sendTransaction()
-  const clientMap = new Map<number, BaseKernelAccountClient>();
-  for (const accountClient of _clients) {
-    if (clientMap.get(accountClient.chain.id) !== undefined) {
-      throw new Error(`Duplicate account client id ${accountClient.chain.id}`);
+  params: ExecuteTransactionParams,
+): Promise<ExecuteTransactionResult> => {
+  const { batches, clients } = params;
+
+  const kernelClientMap = new Map<number, BaseKernelAccountClient>();
+
+  for (const client of clients) {
+    if (kernelClientMap.get(client.chain.id) !== undefined) {
+      throw new Error(`Duplicate kernel client id ${client.chain.id}`);
     }
-    clientMap.set(accountClient.chain.id, accountClient);
+    kernelClientMap.set(client.chain.id, client);
   }
 
-  if (_params.batches.length === 1) {
-    const batch = _params.batches[0]!;
-    const client = clientMap.get(batch.chainId);
+  if (params.batches.length === 1) {
+    const batch = params.batches[0]!;
+    const client = kernelClientMap.get(batch.chainId);
     if (!client) {
       throw new Error(`Account client for chain ${batch.chainId} not found`);
     }
@@ -64,13 +68,11 @@ export const executeTransaction = async (
     return [receipt];
   }
 
-  // Case 2: Multiple batches, one chain/multiple chains, use prepareAndSignUserOperations()
+  const kernelClients: BaseKernelAccountClient[] = [];
+  const signUserOpsParams: PrepareAndSignUserOperationsParameters[] = [];
 
-  const clients: BaseKernelAccountClient[] = [];
-  const params: PrepareAndSignUserOperationsParameters[] = [];
-
-  for await (const batch of _params.batches) {
-    const client = clientMap.get(batch.chainId);
+  for await (const batch of batches) {
+    const client = kernelClientMap.get(batch.chainId);
     if (!client) {
       throw new Error(`Account client for chain ${batch.chainId} not found`);
     }
@@ -85,15 +87,18 @@ export const executeTransaction = async (
     const callData = await client.account.encodeCalls(batch.calls);
 
     // Push to clients and params
-    clients.push(client);
-    params.push({
+    kernelClients.push(client);
+    signUserOpsParams.push({
       callData,
       chainId: batch.chainId,
       nonce,
     });
   }
 
-  const signedUserOps = await prepareAndSignUserOperations(clients, params);
+  const signedUserOps = await prepareAndSignUserOperations(
+    kernelClients,
+    signUserOpsParams,
+  );
 
   const promises = signedUserOps.map((signerUserOp, i) => {
     const client = clients[i]!;
