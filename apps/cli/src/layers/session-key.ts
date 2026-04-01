@@ -1,13 +1,17 @@
 import { Wallet } from "@ethereumjs/wallet";
 import {
-  createMultiChainEcdsaSessionKey,
+  createSessionKey as createNameraSessionKey,
   isSessionKeyInstalled,
 } from "@namera-ai/sdk/session-key";
 import { Data, Effect, Layer, type Redacted, Schema, ServiceMap } from "effect";
 import type { QuitError } from "effect/Terminal";
 import type { Prompt } from "effect/unstable/cli";
 import { hexToBytes, toHex } from "viem";
-import { type LocalAccount, privateKeyToAccount } from "viem/accounts";
+import {
+  generatePrivateKey,
+  type LocalAccount,
+  privateKeyToAccount,
+} from "viem/accounts";
 
 import {
   type CreateSessionKeyParams,
@@ -151,8 +155,14 @@ export const layer = Layer.effect(
           { concurrency: "unbounded" },
         );
 
+        const sessionPrivateKey = generatePrivateKey();
+        const sessionKeyAccount = privateKeyToAccount(sessionPrivateKey);
+
         const res = yield* Effect.promise(() =>
-          createMultiChainEcdsaSessionKey({
+          createNameraSessionKey({
+            type: "ecdsa",
+            accountType: "ecdsa",
+            sessionPrivateKey,
             clients,
             entrypointVersion: sa.data.entryPointVersion,
             kernelVersion: sa.data.kernelVersion,
@@ -165,7 +175,7 @@ export const layer = Layer.effect(
         // Encrypt Session Key
         const encData = (yield* Effect.tryPromise({
           try: () =>
-            Wallet.fromPrivateKey(hexToBytes(res.sessionPrivateKey)).toV3(
+            Wallet.fromPrivateKey(hexToBytes(sessionPrivateKey)).toV3(
               params.sessionKeyPassword,
             ),
           catch: () =>
@@ -176,11 +186,12 @@ export const layer = Layer.effect(
         })) as Keystore;
 
         const data: SessionKey = {
+          sessionKeyType: "ecdsa",
           serializedAccounts: res.serializedAccounts.map((a) => ({
             chain: chainIdToChainName(a.chainId),
             serializedAccount: a.serializedAccount,
           })),
-          sessionKeyAddress: res.sessionKeyAddress,
+          sessionKeyAddress: sessionKeyAccount.address,
           smartAccountAlias: sa.alias,
           ...encData,
         };

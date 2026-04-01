@@ -6,6 +6,7 @@ import { Keystore } from "./keystore";
 
 export const SessionKey = Schema.Struct({
   smartAccountAlias: Schema.String,
+  sessionKeyType: Schema.Literals(["ecdsa", "passkey", "multisig"]),
   sessionKeyAddress: EthereumAddress,
   serializedAccounts: Schema.Array(
     Schema.Struct({
