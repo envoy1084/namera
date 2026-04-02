@@ -1,0 +1,89 @@
+---
+title: smart-account import
+description: Import a smart account from raw metadata using JSON params.
+Keywords: smart account, import, metadata, kernel, entry point, namera cli
+---
+
+Imports a smart account into local storage using JSON parameters. This command is params-only and does not support interactive prompts.
+
+## Usage
+
+```bash
+namera smart-account import --params '<json>'
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: `import` -> `i`
+
+## Flags
+
+This command has no command-specific flags.
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution (required)
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--params` is missing, the command fails with an import error.
+
+## Params mode (agents)
+
+Get the JSON schema:
+
+```bash
+namera schema smart-account.import
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-smart",
+  "smartAccountAddress": "0x1bC710cbA70f8Ce638dC5c8F50FDb05d87a7D652",
+  "ownerAlias": "my-owner",
+  "ownerType": "ecdsa",
+  "index": "0",
+  "kernelVersion": "0.3.2",
+  "entryPointVersion": "0.7"
+}
+```
+
+Notes:
+
+- `ownerType` must be one of `ecdsa`, `passkey`, or `multisig`
+- `kernelVersion` must be one of `0.3.0`, `0.3.1`, `0.3.2`, `0.3.3`
+- `entryPointVersion` must be one of `0.7`, `0.8`, `0.9`
+- `index` is a stringified bigint in params mode
+
+## Output
+
+On success, the command returns:
+
+- `alias`: Smart account alias
+- `address`: Smart account address
+- `owner`: Owner keystore alias
+- `index`: Account index
+- `kernelVersion`: Kernel version used for the account
+
+## Examples
+
+Params mode (agents):
+
+```bash
+namera smart-account import --params '{"alias":"my-smart","smartAccountAddress":"0x1bC710cbA70f8Ce638dC5c8F50FDb05d87a7D652","ownerAlias":"my-owner","ownerType":"ecdsa","index":"0","kernelVersion":"0.3.2","entryPointVersion":"0.7"}'
+```
+
+Short aliases:
+
+```bash
+namera sa i --params '{"alias":"my-smart","smartAccountAddress":"0x1bC710cbA70f8Ce638dC5c8F50FDb05d87a7D652","ownerAlias":"my-owner","ownerType":"ecdsa","index":"0","kernelVersion":"0.3.2","entryPointVersion":"0.7"}'
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.import
+```

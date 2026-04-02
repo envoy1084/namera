@@ -1,0 +1,90 @@
+---
+title: smart-account status
+description: Check whether a smart account is deployed on a chain.
+Keywords: smart account, status, deployed, chain, rpc, namera cli
+---
+
+Checks if a smart account is deployed on a given chain. You can optionally provide a custom RPC URL.
+
+## Usage
+
+```bash
+namera smart-account status [--alias <name>] [--chain <chain>] [--rpc-url <url>]
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: none
+
+## Flags
+
+- `--alias`, `-a`: Smart account alias
+- `--chain`: Chain name (must be a supported chain key)
+- `--rpc-url`: Custom RPC URL for the selected chain
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--alias` or `--chain` is missing, the CLI will prompt you to select them. `--rpc-url` is optional.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema smart-account.status
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-smart",
+  "chain": "eth-mainnet",
+  "rpcUrl": "https://rpc.ankr.com/eth"
+}
+```
+
+`rpcUrl` is optional. If omitted, the CLI uses its default public RPC.
+
+## Output
+
+On success, the command returns:
+
+- `deployed`: `true` or `false`
+
+## Examples
+
+Explicit chain:
+
+```bash
+namera smart-account status -a my-smart --chain eth-mainnet
+```
+
+Custom RPC:
+
+```bash
+namera smart-account status --alias my-smart --chain eth-mainnet --rpc-url https://rpc.ankr.com/eth
+```
+
+Params mode (agents):
+
+```bash
+namera smart-account status --params '{"alias":"my-smart","chain":"eth-mainnet"}'
+```
+
+Short alias group:
+
+```bash
+namera sa status -a my-smart --chain eth-mainnet
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.status
+```

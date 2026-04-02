@@ -1,0 +1,47 @@
+---
+title: Smart Account Commands
+description: Create, import, inspect, and manage smart accounts stored by the Namera CLI.
+Keywords: smart account, smart-account, cli, account abstraction, kernel, entry point, namera
+---
+
+Smart accounts are locally stored account descriptors used by the CLI. The `smart-account` command group lets you create, import, list, inspect, check deployment status, and remove those entries.
+
+## Command group
+
+- Group: `namera smart-account`
+- Alias: `namera sa`
+
+Subcommands:
+
+- [`create`](/docs/cli/smart-account/create): Create a new smart account from a keystore owner
+- [`import`](/docs/cli/smart-account/import): Import a smart account from raw metadata
+- [`list`](/docs/cli/smart-account/list): List all stored smart accounts
+- [`info`](/docs/cli/smart-account/info): Get metadata for a single smart account
+- [`status`](/docs/cli/smart-account/status): Check deployment status on a chain
+- [`remove`](/docs/cli/smart-account/remove): Remove a smart account from disk
+
+## Interaction modes
+
+Namera CLI is agent-first and supports two modes on every command:
+
+- Interactive (default). If required fields are missing, the CLI prompts you.
+- Params mode. Pass raw JSON using `--params` for agent-driven execution.
+
+Get the JSON schema for any command:
+
+```bash
+namera schema smart-account.<command>
+```
+
+Example:
+
+```bash
+namera schema smart-account.create
+```
+
+## Common output control
+
+- `--output`, `-o`: `pretty` (default), `json`, or `ndjson`
+- `--quite`, `-q`: suppress output entirely
+
+These are global flags and work the same for every smart-account subcommand.

@@ -1,0 +1,84 @@
+---
+title: smart-account remove
+description: Remove a smart account from local storage.
+Keywords: smart account, remove, delete, metadata, namera cli
+---
+
+Removes a smart account from disk by alias.
+
+## Usage
+
+```bash
+namera smart-account remove [--alias <name>]
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: `remove` -> `rm`
+
+## Flags
+
+- `--alias`, `-a`: Smart account alias to remove
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--alias` is missing, the CLI will prompt you to select a smart account.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema smart-account.remove
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-smart"
+}
+```
+
+## Output
+
+On success, the command returns:
+
+- `success`: `true`
+
+## Examples
+
+Interactive (select a smart account):
+
+```bash
+namera smart-account remove
+```
+
+Partial flags (no prompt):
+
+```bash
+namera smart-account remove --alias my-smart
+```
+
+Params mode (agents):
+
+```bash
+namera smart-account remove --params '{"alias":"my-smart"}'
+```
+
+Short aliases:
+
+```bash
+namera sa rm -a my-smart
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.remove
+```

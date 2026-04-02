@@ -1,0 +1,78 @@
+---
+title: smart-account list
+description: List all locally stored smart accounts.
+Keywords: smart account, list, inventory, kernel, namera cli
+---
+
+Lists every smart account stored on disk and prints basic metadata.
+
+## Usage
+
+```bash
+namera smart-account list
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: `list` -> `ls`
+
+## Flags
+
+This command has no command-specific flags.
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution (empty object)
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+## Params mode (agents)
+
+The list command takes no parameters. The schema is still available:
+
+```bash
+namera schema smart-account.list
+```
+
+If you must pass params, use an empty object:
+
+```bash
+namera smart-account list --params '{}'
+```
+
+## Output
+
+Each item includes:
+
+- `alias`: Smart account alias
+- `address`: Smart account address
+- `owner`: Owner keystore alias
+- `index`: Account index
+- `kernelVersion`: Kernel version used for the account
+
+## Examples
+
+Default output:
+
+```bash
+namera smart-account list
+```
+
+NDJSON output:
+
+```bash
+namera smart-account list --output ndjson
+```
+
+Short aliases:
+
+```bash
+namera sa ls
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.list
+```

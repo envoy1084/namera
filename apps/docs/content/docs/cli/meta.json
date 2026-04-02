@@ -1,6 +1,14 @@
 {
   "icon": "TerminalIcon",
-  "pages": ["---Introduction---", "index", "---Keystore---", "...keystore"],
+  "pages": [
+    "---Introduction---",
+    "index",
+    "installation",
+    "getting-started",
+    "---Commands---",
+    "keystore",
+    "smart-account"
+  ],
   "root": true,
   "title": "CLI"
 }

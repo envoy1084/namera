@@ -1,0 +1,88 @@
+---
+title: smart-account info
+description: Show metadata for a single smart account.
+Keywords: smart account, info, metadata, kernel, namera cli
+---
+
+Fetches metadata for a single smart account by alias.
+
+## Usage
+
+```bash
+namera smart-account info [--alias <name>]
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: none
+
+## Flags
+
+- `--alias`, `-a`: Smart account alias to look up
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--alias` is missing, the CLI will prompt you to select a smart account.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema smart-account.info
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-smart"
+}
+```
+
+## Output
+
+On success, the command returns:
+
+- `alias`: Smart account alias
+- `address`: Smart account address
+- `owner`: Owner keystore alias
+- `index`: Account index
+- `kernelVersion`: Kernel version used for the account
+
+## Examples
+
+Interactive (select a smart account):
+
+```bash
+namera smart-account info
+```
+
+Partial flags (no prompt):
+
+```bash
+namera smart-account info --alias my-smart
+```
+
+Params mode (agents):
+
+```bash
+namera smart-account info --params '{"alias":"my-smart"}'
+```
+
+Short alias group:
+
+```bash
+namera sa info -a my-smart
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.info
+```

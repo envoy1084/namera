@@ -1,0 +1,101 @@
+---
+title: smart-account create
+description: Create a smart account owned by a local keystore.
+Keywords: smart account, create, kernel, owner, keystore, namera cli
+---
+
+Creates a new smart account descriptor owned by an existing keystore. The owner keystore signs the account setup, and the result is stored locally for later use.
+
+## Usage
+
+```bash
+namera smart-account create [--alias <name>] [--owner-alias <alias>] [--owner-password <password>] [--index <n>]
+```
+
+Aliases:
+
+- Group alias: `namera sa`
+- Command alias: `create` -> `c`
+
+## Flags
+
+- `--alias`, `-a`: Smart account alias to create
+- `--owner-alias`, `-oa`: Owner keystore alias
+- `--owner-password`, `-op`: Password for the owner keystore
+- `--index`, `-i`: Account index (default: `0`)
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If any required value is missing, the CLI prompts you. If `--owner-alias` is missing, you select a keystore. If `--owner-password` is missing, you are prompted for it.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema smart-account.create
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-smart",
+  "ownerAlias": "my-owner",
+  "ownerPassword": "my-password",
+  "index": 0
+}
+```
+
+`index` is optional and defaults to `0` when omitted.
+
+## Output
+
+On success, the command returns:
+
+- `address`: Smart account address
+- `kernelVersion`: Kernel version used for the account
+- `index`: Account index
+- `owner`: Owner keystore alias
+
+## Examples
+
+Interactive (prompt for alias, owner, password):
+
+```bash
+namera smart-account create
+```
+
+Partial flags (prompt for password):
+
+```bash
+namera smart-account create --alias my-smart --owner-alias my-owner
+```
+
+Full flags:
+
+```bash
+namera smart-account create -a my-smart -oa my-owner -op my-password -i 0
+```
+
+Params mode (agents):
+
+```bash
+namera smart-account create --params '{"alias":"my-smart","ownerAlias":"my-owner","ownerPassword":"my-password","index":0}'
+```
+
+Short aliases:
+
+```bash
+namera sa c -a my-smart -oa my-owner -op my-password -i 0
+```
+
+Schema lookup:
+
+```bash
+namera schema smart-account.create
+```
