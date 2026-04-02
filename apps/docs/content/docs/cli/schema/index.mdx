@@ -1,0 +1,68 @@
+---
+title: Schema Commands
+description: Print the JSON schema for any Namera CLI command.
+Keywords: schema, json schema, params, cli, namera
+---
+
+Prints a JSON Schema document for a supported CLI command. This is the canonical way for agents to discover the `--params` shape.
+
+## Usage
+
+```bash
+namera schema <command>
+```
+
+## Command paths
+
+Supported command paths:
+
+- `keystore.create`
+- `keystore.decrypt`
+- `keystore.info`
+- `keystore.list`
+- `keystore.import`
+- `keystore.remove`
+- `smart-account.create`
+- `smart-account.list`
+- `smart-account.info`
+- `smart-account.remove`
+- `smart-account.status`
+- `smart-account.import`
+- `session-key.create`
+- `session-key.list`
+- `session-key.info`
+- `session-key.status`
+- `session-key.remove`
+- `mcp.start`
+
+If a command is not listed, it does not currently expose a schema.
+
+## Output
+
+The command prints a JSON Schema document to stdout.
+
+## Examples
+
+Keystore create schema:
+
+```bash
+namera schema keystore.create
+```
+
+Smart account status schema:
+
+```bash
+namera schema smart-account.status
+```
+
+Session key create schema:
+
+```bash
+namera schema session-key.create
+```
+
+MCP start schema:
+
+```bash
+namera schema mcp.start
+```

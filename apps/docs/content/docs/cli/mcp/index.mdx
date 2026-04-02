@@ -1,0 +1,41 @@
+---
+title: MCP Commands
+description: Start and manage the local Namera MCP server.
+Keywords: mcp, server, tools, cli, namera
+---
+
+The `mcp` command group controls the local MCP server used by agents. It wires a smart account and one or more session keys into an MCP-compatible interface.
+
+## Command group
+
+- Group: `namera mcp`
+
+Subcommands:
+
+- [`start`](/docs/cli/mcp/start): Start the local MCP server
+
+## Interaction modes
+
+Namera CLI is agent-first and supports two modes on every command:
+
+- Interactive (default). If required fields are missing, the CLI prompts you.
+- Params mode. Pass raw JSON using `--params` for agent-driven execution.
+
+Get the JSON schema for any command:
+
+```bash
+namera schema mcp.<command>
+```
+
+Example:
+
+```bash
+namera schema mcp.start
+```
+
+## Common output control
+
+`mcp start` does not print output by default. Global output flags still apply but are typically unused.
+
+- `--output`, `-o`: `pretty` (default), `json`, or `ndjson`
+- `--quite`, `-q`: suppress output entirely

@@ -1,0 +1,102 @@
+---
+title: mcp start
+description: Start the local MCP server using a smart account and session keys.
+Keywords: mcp, start, server, session keys, smart account, namera cli
+---
+
+Starts the local MCP server. You must choose a smart account and at least one session key. Session key passwords are required to unlock the keys.
+
+## Usage
+
+```bash
+namera mcp start [--smart-account <alias>] [--session-key <alias>=<password>] [--transport <stdio|http>] [--port <number>]
+```
+
+Aliases:
+
+- Command alias: `start` -> `s`
+
+## Flags
+
+- `--smart-account`, `-sa`: Smart account alias to use for the MCP server
+- `--session-key`, `-sk`: Session key alias/password pair. Repeat to add multiple keys.
+- `--transport`, `-t`: Transport (`stdio` or `http`, default: `stdio`)
+- `--port`, `-p`: Port for `http` transport (default: `8080`)
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--smart-account` or `--session-key` is missing, the CLI will prompt you to select them. When prompted, you will be asked for each session key password.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema mcp.start
+```
+
+Expected shape:
+
+```json
+{
+  "smartAccountAlias": "my-smart",
+  "transport": "stdio",
+  "port": 8080,
+  "sessionKeys": {
+    "my-key": "my-password",
+    "my-other-key": "my-other-password"
+  }
+}
+```
+
+Notes:
+
+- `transport` must be `stdio` or `http`
+- `port` is only used when `transport` is `http`
+- `sessionKeys` is a map of alias to password
+
+## Output
+
+This command starts a long-running server and does not emit a structured response.
+
+## Examples
+
+Single session key (stdio):
+
+```bash
+namera mcp start --smart-account my-smart --session-key my-key=my-password
+```
+
+HTTP transport with explicit port:
+
+```bash
+namera mcp start --smart-account my-smart --session-key my-key=my-password --transport http --port 8080
+```
+
+Multiple session keys:
+
+```bash
+namera mcp start --smart-account my-smart --session-key my-key=my-password --session-key my-other-key=my-other-password
+```
+
+Params mode (agents):
+
+```bash
+namera mcp start --params '{"smartAccountAlias":"my-smart","transport":"http","port":8080,"sessionKeys":{"my-key":"my-password","my-other-key":"my-other-password"}}'
+```
+
+Short alias:
+
+```bash
+namera mcp s --smart-account my-smart --session-key my-key=my-password
+```
+
+Schema lookup:
+
+```bash
+namera schema mcp.start
+```

@@ -28,6 +28,7 @@ const schemas = {
     create: Dto.CreateSessionKeyParams,
     list: Dto.ListSessionKeysParams,
     info: Dto.GetSessionKeyInfoParams,
+    remove: Dto.RemoveSessionKeyParams,
     status: Dto.GetSessionKeyStatusParams,
   },
   mcp: {
