@@ -1,0 +1,97 @@
+---
+title: session-key list
+description: List all locally stored session keys.
+Keywords: session key, list, inventory, policies, namera cli
+---
+
+Lists every session key stored on disk and prints basic metadata. You can optionally filter by smart account.
+
+## Usage
+
+```bash
+namera session-key list [--smart-account <alias>]
+```
+
+Aliases:
+
+- Group alias: `namera sk`
+- Command alias: `list` -> `ls`
+
+## Flags
+
+- `--smart-account`, `-sa`: Filter by smart account alias
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema session-key.list
+```
+
+Expected shape:
+
+```json
+{
+  "smartAccount": "my-smart"
+}
+```
+
+If you want all session keys, pass an empty object:
+
+```bash
+namera session-key list --params '{}'
+```
+
+## Output
+
+Each item includes:
+
+- `alias`: Session key alias
+- `address` or `passKeyName`: Key identifier based on key type
+- `smartAccount`: Smart account alias
+- `chains`: Comma-separated chain names
+
+## Examples
+
+List all session keys:
+
+```bash
+namera session-key list
+```
+
+Filter by smart account:
+
+```bash
+namera session-key list --smart-account my-smart
+```
+
+Params mode (agents):
+
+```bash
+namera session-key list --params '{"smartAccount":"my-smart"}'
+```
+
+JSON output:
+
+```bash
+namera session-key list --output json
+```
+
+Short aliases:
+
+```bash
+namera sk ls
+```
+
+Schema lookup:
+
+```bash
+namera schema session-key.list
+```

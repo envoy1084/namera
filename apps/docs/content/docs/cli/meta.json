@@ -7,7 +7,8 @@
     "getting-started",
     "---Commands---",
     "keystore",
-    "smart-account"
+    "smart-account",
+    "session-key"
   ],
   "root": true,
   "title": "CLI"

@@ -1,0 +1,84 @@
+---
+title: session-key remove
+description: Remove a session key from local storage.
+Keywords: session key, remove, delete, metadata, namera cli
+---
+
+Removes a session key from disk by alias.
+
+## Usage
+
+```bash
+namera session-key remove [--alias <name>]
+```
+
+Aliases:
+
+- Group alias: `namera sk`
+- Command alias: `remove` -> `rm`
+
+## Flags
+
+- `--alias`, `-a`: Session key alias to remove
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--alias` is missing, the CLI will prompt you to select a session key.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema session-key.remove
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-session-key"
+}
+```
+
+## Output
+
+On success, the command returns:
+
+- `success`: `true`
+
+## Examples
+
+Interactive (select a session key):
+
+```bash
+namera session-key remove
+```
+
+Partial flags (no prompt):
+
+```bash
+namera session-key remove --alias my-session-key
+```
+
+Params mode (agents):
+
+```bash
+namera session-key remove --params '{"alias":"my-session-key"}'
+```
+
+Short aliases:
+
+```bash
+namera sk rm -a my-session-key
+```
+
+Schema lookup:
+
+```bash
+namera schema session-key.remove
+```

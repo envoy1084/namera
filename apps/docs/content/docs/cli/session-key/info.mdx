@@ -1,0 +1,94 @@
+---
+title: session-key info
+description: Show metadata and policies for a single session key.
+Keywords: session key, info, policies, metadata, namera cli
+---
+
+Fetches metadata for a single session key by alias.
+
+## Usage
+
+```bash
+namera session-key info [--alias <name>]
+```
+
+Aliases:
+
+- Group alias: `namera sk`
+- Command alias: none
+
+## Flags
+
+- `--alias`, `-a`: Session key alias to look up
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If `--alias` is missing, the CLI will prompt you to select a session key.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema session-key.info
+```
+
+Expected shape:
+
+```json
+{
+  "alias": "my-session-key"
+}
+```
+
+## Output
+
+On success, the command returns:
+
+- `alias`: Session key alias
+- `address` or `passKeyName`: Key identifier based on key type
+- `smartAccount`: Smart account alias
+- `chains`: Comma-separated chain names
+- `policies`: Human-readable policy summary for the session key
+
+## Examples
+
+Interactive (select a session key):
+
+```bash
+namera session-key info
+```
+
+Partial flags (no prompt):
+
+```bash
+namera session-key info --alias my-session-key
+```
+
+Params mode (agents):
+
+```bash
+namera session-key info --params '{"alias":"my-session-key"}'
+```
+
+JSON output:
+
+```bash
+namera session-key info --alias my-session-key --output json
+```
+
+Short alias group:
+
+```bash
+namera sk info -a my-session-key
+```
+
+Schema lookup:
+
+```bash
+namera schema session-key.info
+```

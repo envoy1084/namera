@@ -1,0 +1,46 @@
+---
+title: Session Key Commands
+description: Create, inspect, and manage session keys linked to smart accounts.
+Keywords: session key, session-key, cli, policy, permissions, namera
+---
+
+Session keys are scoped permissions attached to a smart account. The `session-key` command group lets you create, list, inspect, check install status, and remove stored session keys.
+
+## Command group
+
+- Group: `namera session-key`
+- Alias: `namera sk`
+
+Subcommands:
+
+- [`create`](/docs/cli/session-key/create): Create a new session key with policies
+- [`list`](/docs/cli/session-key/list): List all stored session keys
+- [`info`](/docs/cli/session-key/info): Get metadata for a single session key
+- [`status`](/docs/cli/session-key/status): Check if a session key is installed on a chain
+- [`remove`](/docs/cli/session-key/remove): Remove a session key from disk
+
+## Interaction modes
+
+Namera CLI is agent-first and supports two modes on every command:
+
+- Interactive (default). If required fields are missing, the CLI prompts you.
+- Params mode. Pass raw JSON using `--params` for agent-driven execution.
+
+Get the JSON schema for any command:
+
+```bash
+namera schema session-key.<command>
+```
+
+Example:
+
+```bash
+namera schema session-key.create
+```
+
+## Common output control
+
+- `--output`, `-o`: `pretty` (default), `json`, or `ndjson`
+- `--quite`, `-q`: suppress output entirely
+
+These are global flags and work the same for every session-key subcommand.

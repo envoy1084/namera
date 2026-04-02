@@ -1,0 +1,157 @@
+---
+title: session-key create
+description: Create a session key with policy-based permissions for a smart account.
+Keywords: session key, create, policy, permissions, smart account, namera cli
+---
+
+Creates a session key for a smart account and stores it locally. The session key is encrypted with its own password and scoped by one or more policies.
+
+## Usage
+
+```bash
+namera session-key create [--alias <name>] [--smart-account <alias>] [--password <password>] [--owner-password <password>]
+```
+
+Aliases:
+
+- Group alias: `namera sk`
+- Command alias: `create` -> `c`
+
+## Flags
+
+- `--alias`, `-a`: Session key alias to create
+- `--smart-account`, `-sa`: Smart account alias to attach the session key to
+- `--password`, `-p`: Password used to encrypt the session key
+- `--owner-password`, `-op`: Password used to decrypt the owner keystore
+
+Global flags:
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty`, `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output
+
+If any required value is missing, the CLI prompts you. Chain selection and policy configuration are always prompted unless you use params mode.
+
+## Policies
+
+Policies define what the session key can do. You can add multiple policies, or use `sudo` to allow all operations.
+
+Supported policy types:
+
+- `sudo`: Full permission, no restrictions
+- `call`: Restrict targets, functions, and value limits
+- `timestamp`: Limit validity by time range
+- `gas`: Limit total gas spend and optionally require a paymaster
+- `rate-limit`: Limit number of requests per interval
+- `signature-caller`: Restrict who can validate signatures
+
+### Call policy (quick guide)
+
+In interactive mode, you can add call permissions for:
+
+- EOA targets: choose a target address and a max value in ETH units
+- Smart contracts: provide ABI, select functions, and define a max value
+
+In params mode, you can define permissions manually using the call policy schema.
+
+## Params mode (agents)
+
+Use `--params` with the JSON schema for the command:
+
+```bash
+namera schema session-key.create
+```
+
+Expected shape (minimal example):
+
+```json
+{
+  "alias": "my-session-key",
+  "smartAccountAlias": "my-smart",
+  "chains": ["eth-mainnet"],
+  "sessionKeyPassword": "session-password",
+  "ownerKeystorePassword": "owner-password",
+  "policyParams": [{ "type": "sudo" }]
+}
+```
+
+Policy examples:
+
+Timestamp policy:
+
+```json
+{ "type": "timestamp", "validAfter": 1719916800, "validUntil": 1722604800 }
+```
+
+Gas policy:
+
+```json
+{ "type": "gas", "amount": "100000000000000000", "enforcePaymaster": false }
+```
+
+Rate limit policy:
+
+```json
+{ "type": "rate-limit", "interval": 3600, "count": 10, "startAt": 1720000000 }
+```
+
+Signature caller policy:
+
+```json
+{ "type": "signature-caller", "allowedCallers": ["0xabc...", "0xdef..."] }
+```
+
+Call policy (manual permission):
+
+```json
+{
+  "type": "call",
+  "policyVersion": "0.0.4",
+  "permissions": [
+    {
+      "target": "0x1111111111111111111111111111111111111111",
+      "valueLimit": "1000000000000000000"
+    }
+  ]
+}
+```
+
+## Output
+
+On success, the command returns:
+
+- `sessionKeyAddress` (ECDSA keys) or `passKeyName` (passkeys)
+- `smartAccount`: Smart account alias
+- `chains`: List of chain names
+
+## Examples
+
+Interactive (prompt for everything):
+
+```bash
+namera session-key create
+```
+
+Partial flags (prompt for passwords, chains, policies):
+
+```bash
+namera session-key create --alias my-session-key --smart-account my-smart
+```
+
+Params mode (agents):
+
+```bash
+namera session-key create --params '{"alias":"my-session-key","smartAccountAlias":"my-smart","chains":["eth-mainnet"],"sessionKeyPassword":"session-password","ownerKeystorePassword":"owner-password","policyParams":[{"type":"sudo"}]}'
+```
+
+Short aliases:
+
+```bash
+namera sk c -a my-session-key -sa my-smart -p session-password -op owner-password
+```
+
+Schema lookup:
+
+```bash
+namera schema session-key.create
+```
