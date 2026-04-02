@@ -1,6 +1,88 @@
 ---
 title: Introduction
 icon: HandWavingIcon
-description: Welcome to Namera CLI Documentation
+description: Agent-first CLI for managing keystores, smart accounts, session keys, and MCP.
+Keywords: namera cli, agent-first, automation, params, json schema, global flags
 ---
 
+The Namera CLI is a programmable, agent-first interface for managing wallets, smart accounts, session keys, and the local MCP server. It is designed to be equally effective for humans and autonomous agents, with predictable inputs, machine-readable schemas, and consistent outputs.
+
+## What the CLI is
+
+Namera CLI provides:
+
+- Keystore management for encrypted key material
+- Smart account lifecycle utilities
+- Session key creation with policy-based permissions
+- Local MCP server control for agent tooling
+
+Everything is built to be scriptable and safe for automation.
+
+## Agent-first by design
+
+Most CLIs are optimized for humans. Namera CLI is optimized for agents, while still supporting a rich interactive experience. This means:
+
+- Every command has a JSON schema
+- Every command can be driven via `--params`
+- Prompts are the default, but never required
+- Outputs are consistent and machine-friendly
+
+### How it works
+
+Each command supports two execution modes:
+
+- Interactive (default): missing inputs are prompted for
+- Params mode: provide JSON inputs using `--params`
+
+Agents can discover the exact input shape using:
+
+```bash
+namera schema <command>
+```
+
+Example:
+
+```bash
+namera schema session-key.create
+```
+
+## Global flags
+
+These flags are available on every command.
+
+- `--params`: Raw JSON parameters for agent-driven execution
+- `--output`, `-o`: `pretty` (default), `json`, or `ndjson`
+- `--quite`, `-q`: Suppress output entirely
+
+## Params mode
+
+Use `--params` to bypass prompts and send a full JSON payload. This is the preferred mode for agents.
+
+Example:
+
+```bash
+namera smart-account create --params '{"alias":"my-smart","ownerAlias":"my-owner","ownerPassword":"my-password","index":0}'
+```
+
+If `--params` is provided, the CLI ignores any interactive prompts and validates the payload against the schema.
+
+## Output formats
+
+Most commands return structured data. Control the output format with `--output`:
+
+- `pretty`: Human-friendly output (default)
+- `json`: Single JSON document
+- `ndjson`: One JSON object per line
+
+Use `--quite` to suppress output if you only need the exit status.
+
+## Quick start
+
+Explore command groups:
+
+
+- [Keystore Commands](/docs/cli/keystore)
+- [Smart Account Commands](/docs/cli/smart-account)
+- [Session Key Commands](/docs/cli/session-key)
+- [Schema Commands](/docs/cli/schema)
+- [MCP Commands](/docs/cli/mcp)
