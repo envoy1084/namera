@@ -8,6 +8,7 @@ import browserCollections from "fumadocs-mdx:collections/browser";
 
 import type { LegalPageMetadata } from "@/components";
 import { LegalPage, legalPageServerLoader } from "@/components";
+import { getLegalPageSeo } from "@/lib/seo/legal-page";
 
 const clientLoader = browserCollections.miscDocuments.createClientLoader({
   component({ toc, default: MDX }, metadata: LegalPageMetadata) {
@@ -28,5 +29,16 @@ export const Route = createFileRoute("/terms")({
     const data = await legalPageServerLoader({ data: { page: "terms" } });
     await clientLoader.preload(data.path);
     return data;
+  },
+  head: ({ loaderData }) => {
+    // biome-ignore lint/style/noNonNullAssertion: safe
+    const { metadata } = loaderData!;
+    return getLegalPageSeo({
+      title: metadata.title,
+      description: metadata.description,
+      keywords: ["terms", "terms of service", "legal", "namera"].join(","),
+      dateModified: metadata.lastModified.toISOString(),
+      readingTime: metadata.readingTime,
+    });
   },
 });
