@@ -90,8 +90,8 @@ const BlogHomePage = () => {
               <CaretLeftIcon />
             </Button>
           </PaginationItem>
-          {pages.map((page) => (
-            <PaginationItem key={`page-${page.toString()}`}>
+          {pages.map((page, i) => (
+            <PaginationItem key={`page-${page.toString()}-${i.toString()}`}>
               {page === "..." ? (
                 <span className="px-3 text-muted-foreground">…</span>
               ) : (
