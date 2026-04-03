@@ -1,6 +1,6 @@
 ## Development (current)
 
-### Docs
+### Docs/Landing Page
 
 - [x] Basic Project Scaffolding
 - [x] Support for Markdown
@@ -12,10 +12,14 @@
 - [x] Workspaces like structure for docs
 - [x] Dynamic OG Image Generation
 - [x] Home Page
-  - [ ] Illustrations
+  - [x] Illustrations
+- [x] Blog Page
+  - [x] Blog Post Page
+- [x] Terms of Service Page
+- [x] Privacy Policy Page
 - [ ] Writing Docs
   - [ ] Protocol Docs
-  - [ ] CLI Docs
+  - [x] CLI Docs
   - [ ] Core Docs
 
 ### CLI
