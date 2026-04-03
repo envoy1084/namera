@@ -1,26 +1,24 @@
 ---
 title: Introduction
 icon: HandWavingIcon
-description: Agent-first CLI for managing keystores, smart accounts, session keys, and MCP.
+description: Namera CLI gives agents controlled access to smart accounts with session keys and scoped permissions, running fully local and agent-first across chains.
 keywords: namera cli, agent-first, automation, params, json schema, global flags
 ---
 
-Namera CLI is a programmable, agent-first interface for managing wallets, smart accounts, session keys, and local MCP server. It is designed to be equally effective for humans and autonomous agents, with predictable inputs, machine-readable schemas, and consistent outputs.
+Namera CLI gives agents controlled access to smart accounts with session keys and scoped permissions, running fully local and agent-first across chains. It is designed to let autonomous systems safely interact with wallets without exposing private keys or relying on centralized infrastructure.
 
-## What the CLI is
+## What Namera CLI provides
 
-Namera CLI provides:
-
-- Keystore management for encrypted keys
-- Smart account lifecycle utilities
-- Session key creation with policy-based permissions
-- Local MCP server control for agent tooling
-
-Everything is built to be scriptable and safe for automation.
+- [Session Key based Access](): Delegate wallet capabilities to agents using session keys instead of exposing primary private keys.
+- [Scoped Permissions](): Define exactly what an agent can do—limit contracts, methods, spending, and time windows.
+- [Local-First Execution](): Everything runs on-device with no required cloud dependency, ensuring privacy and reliability.
+- [Agent-Controlled Workflows](): Enable agents to execute transactions, automate flows, and interact with smart contracts autonomously.
+- [Multichain Support](): Operate across multiple chains seamlessly with a unified interface for signing and execution.
+- [Programmable Permissions](): Build complex permission logic with different types of policies.
 
 ## Agent-first by design
 
-Most CLIs are optimized for humans. Namera CLI is optimized for agents, while still supporting a rich interactive experience. This means:
+Namera CLI is built around a simple idea: agents should be first-class users of wallets, not an afterthought. This means:
 
 - Every command has a JSON schema
 - Every command can be driven via `--params`
@@ -79,7 +77,6 @@ Use `--quite` to suppress output if you only need the exit status.
 ## Quick start
 
 Explore command groups:
-
 
 - [Keystore Commands](/docs/cli/keystore)
 - [Smart Account Commands](/docs/cli/smart-account)

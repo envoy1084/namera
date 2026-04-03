@@ -1,7 +1,6 @@
 # Namera CLI
 
-**Agent-first CLI for managing keystores, smart accounts, session keys, and MCP.**  
-Deterministic params mode. JSON schema discovery. Structured output.
+Namera CLI gives agents controlled access to smart accounts with session keys and scoped permissions, running fully local and agent-first across chains.
 
 > [!IMPORTANT]
 > This CLI is under active development. Expect changes as we approach v1.
@@ -36,7 +35,6 @@ Deterministic params mode. JSON schema discovery. Structured output.
 ## Prerequisites
 
 - **Node.js 18+** for running the CLI via npm/pnpm/bun
-- **A terminal environment** that can store local keystores (encrypted at rest)
 
 ## Installation
 
@@ -44,22 +42,13 @@ Install globally with your package manager:
 
 ```bash
 npm i -g @namera-ai/cli
+#or
+pnpm i -g @namera-ai/cli
+#or
+bun i -g @namera-ai/cli
+#or
+yarn global add @namera-ai/cli
 ```
-
-```bash
-pnpm add -g @namera-ai/cli
-```
-
-```bash
-bun add -g @namera-ai/cli
-```
-
-Run without global install:
-
-```bash
-npx @namera-ai/cli --help
-```
-
 Build from source:
 
 ```bash
@@ -77,14 +66,18 @@ Create a keystore, smart account, and session key (interactive prompts):
 
 ```bash
 namera keystore create --alias my-owner
+```
+```bash
 namera smart-account create --alias my-smart --owner-alias my-owner
+```
+```bash
 namera session-key create --alias my-session-key --smart-account my-smart
 ```
 
 Start the MCP server:
 
 ```bash
-namera mcp start --smart-account my-smart --session-key my-session-key=my-password
+namera mcp start --smart-account my-smart --session-key my-session-key=my-password --transport http --port 8080
 ```
 
 ## Why Namera CLI?
@@ -96,7 +89,9 @@ namera mcp start --smart-account my-smart --session-key my-session-key=my-passwo
 ```bash
 # Schema discovery
 namera schema session-key.create
+```
 
+```bash
 # Deterministic params mode
 namera session-key create --params '{"alias":"my-session-key","smartAccountAlias":"my-smart","chains":["eth-mainnet"],"sessionKeyPassword":"session-password","ownerKeystorePassword":"owner-password","policyParams":[{"type":"sudo"}]}'
 ```
@@ -134,7 +129,13 @@ Example params mode calls:
 
 ```bash
 namera keystore create --params '{"alias":"my-owner","password":"my-password"}'
+```
+
+```bash
 namera smart-account create --params '{"alias":"my-smart","ownerAlias":"my-owner","ownerPassword":"my-password","index":0}'
+```
+
+```bash
 namera session-key create --params '{"alias":"my-session-key","smartAccountAlias":"my-smart","chains":["eth-mainnet"],"sessionKeyPassword":"session-password","ownerKeystorePassword":"owner-password","policyParams":[{"type":"sudo"}]}'
 ```
 
@@ -206,19 +207,32 @@ See the supported chain keys and IDs on [Namera Documentation](https://namera.ai
 You can pass chain-specific environment variables when starting MCP:
 
 ```bash
+# Ethereum Mainnet
 export ETH_MAINNET_RPC_URL="https://mainnet.infura.io/v3/YOUR-PROJECT-ID"
 export ETH_MAINNET_BUNDLER_URL="https://rpc.zerodev.app/api/v3/<api-token>/chain/1"
 export ETH_MAINNET_PAYMASTER_URL="https://rpc.zerodev.app/api/v3/<api-token>/chain/1"
+
+# Polygon Mainnet
+export POLYGON_MAINNET_RPC_URL="https://polygon-rpc.com"
+export POLYGON_MAINNET_BUNDLER_URL="https://rpc.zerodev.app/api/v3/<api-token>/chain/137"
+export POLYGON_MAINNET_PAYMASTER_URL="https://rpc.zerodev.app/api/v3/<api-token>/chain/137"
+
+# ... and more
 ```
 
-By default, MCP uses the public Pimlico RPC: `https://public.pimlico.io/v2/{chain_id}/rpc`.
+By default, MCP uses the public RPC and public Pimlico Bundler RPC: `https://public.pimlico.io/v2/{chain_id}/rpc`.
 
 ## Examples
 
 Create a keystore and smart account:
 
 ```bash
+# Create a keystore
 namera keystore create -a my-owner -p my-password
+```
+
+```bash
+# Create a smart account
 namera smart-account create -a my-smart -oa my-owner -op my-password -i 0
 ```
 
@@ -231,7 +245,12 @@ namera session-key create -a my-session-key -sa my-smart
 Check deployment status:
 
 ```bash
+# Check smart account deployment status on Ethereum Mainnet
 namera smart-account status --alias my-smart --chain eth-mainnet
+```
+
+```bash
+# Check session key installation status on Ethereum Mainnet
 namera session-key status --alias my-session-key --chain eth-mainnet
 ```
 
