@@ -1,4 +1,45 @@
 ---
 title: Sudo Policy
+description: Grant a session key full permissions (all calls and signatures).
+keywords: sudo policy, session keys, permissions, zerodev, namera, account abstraction
 ---
 
+## What this policy does
+
+The sudo policy grants the session key **full authority**. With this policy attached, the session key can send any UserOp and sign any message, just like the primary signer. There are no restrictions on targets, calldata, gas usage, time windows, or rate limits.
+
+Use this only when the session key is as trusted as the account owner, or when you are building internal automation that already runs in a highly controlled environment.
+
+---
+
+## Code example
+
+```ts
+import { toSudoPolicy } from "@namera-ai/sdk/policy";
+
+const sudoPolicy = toSudoPolicy({});
+```
+
+Add it to the policies array when creating a session key. For full setup, see [Create Session Key](/docs/sdk/session-keys/create) or [Create Passkey Session Key](/docs/sdk/session-keys/create-passkey-session-key).
+
+---
+
+## Use cases
+
+- Internal ops tooling where you control the runtime environment.
+- Migration or recovery scripts that need to perform unrestricted actions.
+- Temporary admin access during development or testing.
+
+---
+
+## When to use and when not to use
+
+Use when:
+
+- The session key is stored in secure infrastructure you fully control.
+- You need maximum flexibility and are willing to accept full account exposure if the key leaks.
+
+Avoid when:
+
+- You are delegating access to a third‑party agent, dapp, or plugin.
+- You want least‑privilege permissions or spend limits.
