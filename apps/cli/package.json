@@ -15,15 +15,33 @@
     "json-nd": "^1.0.0",
     "viem": "^2.47.5"
   },
-  "description": "",
+  "description": "Agent-first smart account interface with session keys and scoped permissions, enabling fully local multichain automation.",
   "devDependencies": {
     "@namera-ai/config": "workspace:*",
     "@types/node": "^25.5.0",
     "tsdown": "^0.21.4",
     "typescript": "^5.9.3"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "homepage": "https://github.com/thenamespace/namera#readme",
-  "keywords": [],
+  "keywords": [
+    "namera",
+    "smart accounts",
+    "account abstraction",
+    "session keys",
+    "wallet automation",
+    "agent wallets",
+    "agents",
+    "multichain",
+    "web3 cli",
+    "passkeys",
+    "scoped permissions",
+    "local first",
+    "automation"
+  ],
   "license": "Apache-2.0",
   "name": "@namera-ai/cli",
   "repository": {
