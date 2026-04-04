@@ -1,0 +1,385 @@
+---
+title: Passkey Smart Account
+description: Create a Smart Account with Passkey validator
+keywords: passkey, smart account, account abstraction, Keychain, TouchID, Face ID, WebAuthn, RIP-7212, EIP-7951
+---
+
+Passkeys are WebAuthn credentials: device-generated cryptographic key pairs created inside secure hardware (Secure Enclave, TPM, or equivalent). The private key never leaves the device, and only the public key is shared. Major platform providers like Apple (iCloud Keychain), Google (Password Manager), and Microsoft (Windows Hello) now ship passkey support, so users can authenticate with Face ID, Touch ID, or device PIN instead of seed phrases. For a full compatibility matrix across browsers and OSes, see [passkey.dev](https://passkeys.dev/device-support/#matrix).
+
+In Web3, the biggest benefit is UX and security: users never have to copy or back up a seed phrase, and the passkey can be synced by the platform provider while still remaining hardware-protected.
+
+On Ethereum-style chains, passkey signature verification can happen in two ways:
+
+- Native precompile verification ([RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md) on rollups, [EIP-7951](https://eips.ethereum.org/EIPS/eip-7951) on Ethereum). This is the ideal path and uses very little gas (around 3,450 gas for P-256 verification).
+- Smart contract verification using libraries like [Daimo](https://github.com/daimo-eth/p256-verifier) or [FCL](https://github.com/rdubois-crypto/FreshCryptoLib). This works on any EVM chain but is much more expensive (roughly 300-400k gas for P-256 verification).
+
+Namera uses ZeroDev under the hood, and ZeroDev's passkey validator is progressive. It automatically uses native precompiles when they exist and falls back to a smart contract verifier when they do not. If a chain adds RIP-7212/EIP-7951 later, the same validator starts using the precompile without upgrades or migrations.
+
+---
+
+## Import
+
+```ts
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+```
+
+---
+
+## Usage
+
+To create a passkey smart account, you need a WebAuthn key, a public client, and a bundler client. The WebAuthn key is created by running a passkey registration or login flow via your passkey server.
+
+```ts title="index.ts" tab="index.ts"
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+import { http } from "viem";
+import { mainnet } from "viem/chains";
+import { publicClient } from "./client";
+
+const webAuthnKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register, // or WebAuthnMode.Login
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3",
+});
+
+const saAddress = client.account.address; // Smart Account Address
+```
+
+```ts title="client.ts" tab="client.ts"
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+```
+
+---
+
+## Examples
+
+Create a new passkey smart account client on Ethereum Mainnet with a paymaster.
+
+```ts title="index.ts"
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+import { createPublicClient, http } from "viem";
+import { createPaymasterClient } from "viem/account-abstraction";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+
+const paymaster = createPaymasterClient({
+  transport: http("ZERO_DEV_PAYMASTER_URL"),
+});
+
+const webAuthnKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register, // or WebAuthnMode.Login
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3",
+  paymaster,
+});
+
+const saAddress = client.account.address; // Smart Account Address
+```
+
+:::warning
+The Bundler URL above is a public endpoint. Please do not use it in production as you will likely be rate-limited. Consider using [Pimlico's Bundler](https://www.pimlico.io/), [Biconomy's Bundler](https://www.biconomy.io/), or another Bundler service.
+:::
+
+---
+
+## Parameters
+
+### webAuthnKey
+
+- Only required when `type="passkey"`
+- **Type:** `WebAuthnKey`
+
+```ts title="index.ts"
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+
+const webAuthnKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register,
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey, // [!code focus]
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3",
+});
+```
+
+### client
+
+- **Type:** `Client<HttpTransport, Chain, JsonRpcAccount | LocalAccount | undefined>`
+
+```ts title="index.ts"
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+```
+
+### bundlerTransport
+
+- **Type:** `Transport`
+
+```ts title="index.ts"
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+```
+
+### chain
+
+- **Type:** `Chain`
+
+```ts title="index.ts"
+import { mainnet } from "viem/chains";
+```
+
+### entrypointVersion
+
+- **Type:** `EntrypointVersion` => `"0.6" | "0.7" | "0.8" | "0.9"{:ts}`
+
+```ts twoslash title="index.ts"
+// @noErrors
+import { EntryPointVersion } from "viem/account-abstraction"; // [!code focus]
+//          ^?
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7", // [!code focus]
+  kernelVersion: "0.3.3",
+});
+```
+
+### kernelVersion
+
+- **Type:** `KernelVersion` => `"0.0.2" | "0.2.2" | "0.2.3" | "0.2.4" | "0.3.1" | "0.3.2" | "0.3.3"{:ts}`
+
+> Note: Kernel 0.2.x supports only Entrypoint 0.6. For Kernel 0.3.x, you can use Entrypoint 0.7 or 0.8.
+
+```ts title="index.ts"
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3", // [!code focus]
+});
+```
+
+### index
+
+```ts title="index.ts"
+import { createAccountClient } from "@namera-ai/sdk/account";
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3",
+  index: 0n, // [!code focus]
+});
+```
+
+### paymaster
+
+- **Type:** `PaymasterClient`
+
+```ts title="index.ts"
+import { createPaymasterClient } from "viem/account-abstraction"; // [!code focus]
+import { createAccountClient } from "@namera-ai/sdk/account";
+
+const paymaster = createPaymasterClient({ // [!code focus]
+  transport: http("ZERO_DEV_PAYMASTER_URL"), // [!code focus]
+}); // [!code focus]
+
+const client = await createAccountClient({
+  type: "passkey",
+  webAuthnKey,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.3",
+  index: 0n,
+  paymaster: paymasterClient, // [!code focus]
+});
+```
+
+---
+
+## FAQs
+
+### Why do we need a passkey server?
+
+WebAuthn registration and login are challenge-response flows. The server is responsible for issuing a challenge, binding it to a user identity, and later validating the signed response. It also persists the public credential (credential ID, public key, and counters) so the user can authenticate again.
+
+If you try to do everything client-side, you still need a place to store the public credential. The only canonical place onchain is the account itself, which means you'd need to deploy the account first and write the credential during deployment or with an extra transaction. That removes counterfactual UX and adds an extra onchain write and gas cost before the account can be used.
+
+### How do I use my own passkey server?
+
+You can run your own passkey server as long as it implements the standard WebAuthn flows. Below is a minimal API surface; the examples use `@simplewebauthn/server`, but any compatible WebAuthn implementation works.
+
+#### `/register/options`
+
+Create registration options for the relying party (your app) and return them to the client. Persist the generated `challenge` and a stable `userID` in your database/session so you can validate the response later. These options instruct the authenticator to create a resident key and require user verification.
+
+```ts
+import { generateRegistrationOptions } from "@simplewebauthn/server";
+
+const options = await generateRegistrationOptions({
+  rpName, // your app name
+  rpID, // your app domain
+  userID, // a unique user ID
+  userName, // user name (passkey name)
+  userDisplayName,
+  authenticatorSelection: {
+    residentKey: "required",
+    userVerification: "required",
+    authenticatorAttachment: "platform",
+  },
+});
+
+return options;
+```
+
+#### `/register/verify`
+
+Verify the attestation response using the previously stored challenge, expected RP ID, and origin. On success, store the credential material (credential ID, public key, and the signature counter) in your database so the user can log in later.
+
+```ts
+import { verifyRegistrationResponse } from "@simplewebauthn/server";
+
+// get credential from request
+const { cred } = await request.json<{
+  cred: RegistrationResponseJSON;
+}>();
+
+const clientData = JSON.parse(atob(cred.response.clientDataJSON));
+
+const verification = await verifyRegistrationResponse({
+  response: cred,
+  expectedChallenge: clientData.challenge,
+  expectedRPID, // your app domain
+  expectedOrigin: c.req.header("origin")!, // Allow from any origin
+  requireUserVerification: true,
+});
+
+if (verification.verified) {
+  // save the user credential like pubKey, credentialId to your database
+  // ...
+
+  // return the verification result
+  return { verification };
+}
+
+// return 401 error if the verification is failed
+```
+
+#### `/login/options`
+
+Generate authentication options with a fresh challenge and return them to the client. Save the challenge server-side so you can verify it during the next step. Optionally restrict `allowCredentials` to known credential IDs if you want to avoid account enumeration.
+
+```ts
+import { generateAuthenticationOptions } from "@simplewebauthn/server";
+
+const options = await generateAuthenticationOptions({
+  userVerification: "required",
+  rpID: domainName,
+});
+
+return options;
+```
+
+#### `/login/verify`
+
+Verify the authentication response against your stored challenge, RP ID, and origin. Use the stored credential to validate the signature and update the counter on success. Return the verification result and the user's public key to the client, since the client may not have the public key during login.
+
+```ts
+import { verifyAuthenticationResponse } from "@simplewebauthn/server";
+
+const cred = await request.json<{
+  cred: AuthenticationResponseJSON;
+}>();
+
+const clientData = JSON.parse(atob(cred.response.clientDataJSON));
+
+// get user credential from your database
+const user = await userRepo.get(userId);
+const credential = user.credentials[cred.id];
+
+const verification = await verifyAuthenticationResponse({
+  response: cred,
+  expectedChallenge: clientData.challenge,
+  expectedOrigin: c.req.header("origin")!, // Allow from any origin
+  expectedRPID: domainName,
+  authenticator: credential,
+});
+
+if (verification.verified) {
+  // get new counter
+  const { newCounter } = verification.authenticationInfo;
+
+  // update the user credential in your database
+  // ...
+
+  // return the verification result and the user's public key
+  return { verification, pubKey: credential.pubKey };
+}
+
+// return 401 error if the verification is failed
+```
