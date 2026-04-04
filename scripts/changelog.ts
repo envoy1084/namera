@@ -100,7 +100,7 @@ date: ${date}
 
       yield* fs.writeFileString(filePath, content);
       yield* Effect.log(
-        `✅ Generated docs changelog for ${pkg} at content/changelog/${safePkgName}/${date}.mdx`,
+        `✅ Generated docs changelog for ${pkg} at content/changelog/${safePkgName}/${fileName}`,
       );
     }),
   );

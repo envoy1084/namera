@@ -28,7 +28,7 @@
     "./tsconfig",
     "./tsdown"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "name": "@namera-ai/config",
   "private": "true",
   "type": "module",
