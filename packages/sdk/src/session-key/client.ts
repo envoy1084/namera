@@ -1,6 +1,11 @@
 import { deserializePermissionAccount } from "@zerodev/permissions";
-import { toECDSASigner } from "@zerodev/permissions/signers";
 import {
+  toECDSASigner,
+  toWebAuthnSigner,
+  WebAuthnSignerVersion,
+} from "@zerodev/permissions/signers";
+import {
+  type CreateKernelAccountReturnType,
   createKernelAccountClient,
   type KernelAccountClient,
 } from "@zerodev/sdk";
@@ -52,7 +57,6 @@ export const createSessionKeyClient = async <
   >
 > => {
   const {
-    sessionKeySigner,
     client,
     serializedAccount,
     bundlerTransport,
@@ -64,17 +68,60 @@ export const createSessionKeyClient = async <
 
   const entryPoint = getEntryPoint(entrypointVersion);
 
-  const sessionSigner = await toECDSASigner({
-    signer: sessionKeySigner,
-  });
+  let sessionKeyAccount: CreateKernelAccountReturnType<TEntrypointVersion>;
 
-  const sessionKeyAccount = await deserializePermissionAccount(
-    client,
-    entryPoint,
-    kernelVersion,
-    serializedAccount,
-    sessionSigner,
-  );
+  if (params.type === "ecdsa") {
+    const { signer } = params as CreateSessionKeyClientParams<
+      "ecdsa",
+      TClientTransport,
+      TBundlerTransport,
+      TPaymasterTransport,
+      TChain,
+      TRpcSchema,
+      TEntrypointVersion,
+      TKernelVersion
+    >;
+    const sessionSigner = await toECDSASigner({
+      signer: signer,
+    });
+
+    sessionKeyAccount = await deserializePermissionAccount(
+      client,
+      entryPoint,
+      kernelVersion,
+      serializedAccount,
+      sessionSigner,
+    );
+  } else if (params.type === "passkey") {
+    const { webAuthnKey } = params as CreateSessionKeyClientParams<
+      "passkey",
+      TClientTransport,
+      TBundlerTransport,
+      TPaymasterTransport,
+      TChain,
+      TRpcSchema,
+      TEntrypointVersion,
+      TKernelVersion
+    >;
+
+    const sessionSigner = await toWebAuthnSigner(
+      client as Client<TClientTransport, TChain, undefined>,
+      {
+        webAuthnKey,
+        webAuthnSignerVersion: WebAuthnSignerVersion.V0_0_4_PATCHED,
+      },
+    );
+
+    sessionKeyAccount = await deserializePermissionAccount(
+      client,
+      entryPoint,
+      kernelVersion,
+      serializedAccount,
+      sessionSigner,
+    );
+  } else {
+    throw new Error("Unsupported session key type");
+  }
 
   const paymaster = Paymaster
     ? {

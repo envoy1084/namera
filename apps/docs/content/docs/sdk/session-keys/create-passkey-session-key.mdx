@@ -1,0 +1,462 @@
+---
+title: Passkey Session Key
+description: Create a passkey-backed session key for an ECDSA smart account
+---
+
+Passkey session keys let you authorize temporary access using WebAuthn credentials instead of an ECDSA private key. This is useful when you want users to approve scoped permissions with a device prompt (Face ID/Touch ID) instead of managing another key. The primary account remains ECDSA, while the session key is passkey-based.
+
+If you need multichain support with a single approval, prefer **ECDSA smart accounts with ECDSA session keys**. That combination supports multi-chain signing via a single signature and is the recommended path for production use.
+
+---
+
+## Import
+
+```ts
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+import { createSessionKey, createSessionKeyClient } from "@namera-ai/sdk/session-key";
+```
+
+---
+
+## Usage
+
+To create a passkey session key for an ECDSA smart account, you:
+
+1. Create your ECDSA smart account client.
+2. Register or login a passkey to get a WebAuthn key.
+3. Create a passkey session key with policies.
+4. Build a session key client from the serialized account.
+
+```ts title="index.ts" tab="index.ts"
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+import { createSessionKey, createSessionKeyClient } from "@namera-ai/sdk/session-key";
+import { http } from "viem";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { mainnet } from "viem/chains";
+import { publicClient } from "./clients";
+
+const signer = privateKeyToAccount(generatePrivateKey());
+
+const accountClient = await createAccountClient({
+  type: "ecdsa",
+  signer,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+});
+
+const webAuthnSessionKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register, // or WebAuthnMode.Login
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [
+    // Policies for this session key
+  ],
+  signer,
+  webAuthnSessionKey,
+});
+
+const serializedAccount = sessionKey.serializedAccounts[0]
+  ?.serializedAccount as string;
+
+const sessionKeyClient = await createSessionKeyClient({
+  type: "passkey",
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount,
+  webAuthnKey: webAuthnSessionKey,
+});
+
+// Use sessionKeyClient to send UserOps with the passkey session key.
+```
+
+```ts title="clients.ts" tab="clients.ts"
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+```
+
+---
+
+## Examples
+
+Create a passkey session key with a paymaster, then build a session key client.
+
+```ts title="index.ts"
+import { createAccountClient } from "@namera-ai/sdk/account";
+import { toWebAuthnKey, WebAuthnMode } from "@namera-ai/sdk/passkey";
+import {
+  createSessionKey,
+  createSessionKeyClient,
+} from "@namera-ai/sdk/session-key";
+import { createPublicClient, http } from "viem";
+import { createPaymasterClient } from "viem/account-abstraction";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+
+const paymaster = createPaymasterClient({
+  transport: http("ZERO_DEV_PAYMASTER_URL"),
+});
+
+const signer = privateKeyToAccount(generatePrivateKey());
+
+const client = await createAccountClient({
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  paymaster,
+  signer,
+  type: "ecdsa",
+});
+
+const webAuthnSessionKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register,
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const sessionKey = await createSessionKey({
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [
+    // Policies for this session key
+  ],
+  signer,
+  type: "passkey",
+  webAuthnSessionKey,
+});
+
+const serializedAccount = sessionKey.serializedAccounts[0]
+  ?.serializedAccount as string;
+
+const sessionKeyClient = await createSessionKeyClient({
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  chain: mainnet,
+  client: publicClient,
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount,
+  type: "passkey",
+  webAuthnKey: webAuthnSessionKey,
+});
+
+// Use this to get the session key to send transactions.
+```
+
+:::warning
+The Bundler URL above is a public endpoint. Please do not use it in production as you will likely be rate-limited. Consider using [Pimlico's Bundler](https://www.pimlico.io/), [Biconomy's Bundler](https://www.biconomy.io/), or another Bundler service.
+:::
+
+---
+
+## Multichain note
+
+Passkey session keys do not support multi-chain signing. If you want the same session key across multiple chains, you must approve once per chain (N prompts for N chains). For a single approval across many chains, use an ECDSA session key with an ECDSA smart account.
+
+---
+
+## Policies
+
+Policies define the conditions under which a session key can sign UserOps. See [Policies](/docs/sdk/session-keys/policies) for detailed policy builders and examples.
+
+---
+
+## Parameters
+
+### type
+
+- **Value:** `"passkey"`
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey", // [!code focus]
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### accountType
+
+- **Value:** `"ecdsa"`
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa", // [!code focus]
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### webAuthnSessionKey
+
+- **Type:** `WebAuthnKey`
+
+```ts title="index.ts"
+const webAuthnSessionKey = await toWebAuthnKey({
+  mode: WebAuthnMode.Register,
+  passkeyName: "passkey name",
+  passkeyServerHeaders: {},
+  passkeyServerUrl: "YOUR_PASSKEY_SERVER_URL",
+});
+
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey, // [!code focus]
+});
+```
+
+### clients
+
+- **Type:** `Client[]`
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient], // [!code focus]
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### signer
+
+- **Type:** `Signer`
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer, // [!code focus]
+  webAuthnSessionKey,
+});
+```
+
+### policies
+
+- **Type:** `Policy[]`
+- See [Policies](/docs/sdk/session-keys/policies).
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [/* ... */], // [!code focus]
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### entrypointVersion
+
+- **Type:** `EntrypointVersion` => `"0.6" | "0.7" | "0.8" | "0.9"{:ts}`
+
+```ts twoslash title="index.ts"
+// @noErrors
+import { EntryPointVersion } from "viem/account-abstraction"; // [!code focus]
+//          ^?
+
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7", // [!code focus]
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### kernelVersion
+
+- **Type:** `KernelVersion` => `"0.0.2" | "0.2.2" | "0.2.3" | "0.2.4" | "0.3.1" | "0.3.2" | "0.3.3"{:ts}`
+
+> Note: Kernel 0.2.x supports only Entrypoint 0.6. For Kernel 0.3.x, you can use Entrypoint 0.7 or 0.8.
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2", // [!code focus]
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+});
+```
+
+### index
+
+```ts title="index.ts"
+const sessionKey = await createSessionKey({
+  type: "passkey",
+  accountType: "ecdsa",
+  clients: [publicClient],
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  policies: [],
+  signer,
+  webAuthnSessionKey,
+  index: 0n, // [!code focus]
+});
+```
+
+### serializedAccount
+
+- **Type:** `string`
+
+```ts title="index.ts"
+const serializedAccount = sessionKey.serializedAccounts[0]
+  ?.serializedAccount as string;
+
+const sessionKeyClient = await createSessionKeyClient({
+  type: "passkey",
+  client: publicClient,
+  chain: mainnet,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount, // [!code focus]
+  webAuthnKey: webAuthnSessionKey,
+});
+```
+
+### webAuthnKey
+
+- **Type:** `WebAuthnKey`
+- Use the same WebAuthn key you created for the session key.
+
+```ts title="index.ts"
+const sessionKeyClient = await createSessionKeyClient({
+  type: "passkey",
+  client: publicClient,
+  chain: mainnet,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount,
+  webAuthnKey: webAuthnSessionKey, // [!code focus]
+});
+```
+
+### client
+
+- **Type:** `Client<HttpTransport, Chain, JsonRpcAccount | LocalAccount | undefined>`
+
+```ts title="index.ts"
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+```
+
+### bundlerTransport
+
+- **Type:** `Transport`
+
+```ts title="index.ts"
+const sessionKeyClient = await createSessionKeyClient({
+  type: "passkey",
+  client: publicClient,
+  chain: mainnet,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount,
+  webAuthnKey: webAuthnSessionKey,
+});
+```
+
+### chain
+
+- **Type:** `Chain`
+
+```ts title="index.ts"
+import { mainnet } from "viem/chains";
+```
+
+### paymaster
+
+- **Type:** `PaymasterClient`
+
+```ts title="index.ts"
+import { createPaymasterClient } from "viem/account-abstraction"; // [!code focus]
+import { createSessionKeyClient } from "@namera-ai/sdk/session-key";
+
+const paymaster = createPaymasterClient({ // [!code focus]
+  transport: http("ZERO_DEV_PAYMASTER_URL"), // [!code focus]
+}); // [!code focus]
+
+const sessionKeyClient = await createSessionKeyClient({
+  type: "passkey",
+  client: publicClient,
+  chain: mainnet,
+  bundlerTransport: http("https://public.pimlico.io/v2/1/rpc"), // Public Pimlico RPC
+  entrypointVersion: "0.7",
+  kernelVersion: "0.3.2",
+  serializedAccount,
+  webAuthnKey: webAuthnSessionKey,
+  paymaster: paymasterClient, // [!code focus]
+});
+```

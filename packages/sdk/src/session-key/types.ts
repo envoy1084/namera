@@ -89,10 +89,9 @@ export type CreateSessionKeyClientParams<
     JsonRpcAccount | LocalAccount | undefined
   >;
   chain: TChain;
-  sessionKeySigner: Signer;
   serializedAccount: string;
   bundlerTransport: TBundlerTransport;
   paymaster?: PaymasterClient<TPaymasterTransport, TRpcSchema>;
   entrypointVersion: TEntrypointVersion;
   kernelVersion: TKernelVersion;
-};
+} & SessionKeyAccountParamsMap[TSessionKeyType];

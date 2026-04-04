@@ -1,0 +1,79 @@
+---
+title: Policies
+description: Overview of session key policies and how to scope permissions
+---
+
+Policies are programmable constraints attached to session keys. They define **exactly** what a delegated key can do, when it can do it, and how much it can spend. Instead of giving an agent or dapp full access to a smart account, you issue a session key with policies that enforce least-privilege execution onchain.
+
+Think of a policy as a contract-enforced rule set: every UserOp signed by a session key is checked against these rules before execution. If the UserOp violates any policy, it is rejected.
+
+This makes session keys ideal for:
+
+- Agents that need continuous access but only within bounded permissions.
+- Background automation (subscriptions, scheduled actions, rebalancing) without exposing the primary signer.
+- Multi-tenant systems where each integration gets a tightly scoped key.
+
+---
+
+## Why policies matter
+
+Without policies, a session key is effectively a second owner. If it is leaked, it can drain funds or execute arbitrary calls. Policies reduce the blast radius by turning a key into a narrow, purpose-built capability.
+
+Example scenarios:
+
+- **Daily spend limit:** allow transfers of up to 100 USDC per day.
+- **Protocol allowlist:** only allow calls to Uniswap and only to a specific swap function.
+- **Message signing restrictions:** allow signing only a specific EIP-712 message domain.
+- **Time-boxed access:** enable an automation bot only during a specific campaign window.
+
+---
+
+## Policy types
+
+ZeroDev exposes several policy types that can be combined. You can attach multiple policies to the same session key and they all must pass for a UserOp to be valid.
+
+### Sudo policy
+
+Grants full permissions, equivalent to the primary signer. Use this only for trusted services or internal automation where you need full control.
+
+### Call policy
+
+Restricts contract calls to specific targets, functions, and parameters. This is the most common policy for dapp integrations.
+
+**Example:** allow only Uniswap swaps from USDC to WETH with a max amount per swap, or allow a vault contract’s `deposit` function only.
+
+### Gas policy
+
+Caps total gas usage for a session key. Useful for budgeting and preventing runaway automation.
+
+**Example:** allow up to 200k gas per day for a trading bot.
+
+### Signature policy
+
+Restricts which messages can be signed. Use this for offchain approvals or typed-data signatures.
+
+**Example:** allow signing a specific EIP-712 domain for order approvals, but block all other messages.
+
+### Rate limit policy
+
+Limits how frequently UserOps can be sent. Good for subscriptions or usage throttling.
+
+**Example:** allow one UserOp every 24 hours for a streaming payment or automated rebalance.
+
+### Timestamp policy
+
+Restricts when a session key is valid. Useful for time-boxed access.
+
+**Example:** allow a key only during a campaign week, or only during business hours.
+
+---
+
+## Agent friendly access
+
+Agents often need long-lived access to execute tasks, but should never receive the primary signer. Policies make this safe by enforcing a narrow permission envelope onchain. If an agent is compromised, the attacker can only perform the actions permitted by the policies.
+
+This model is especially useful for:
+
+- **Subscriptions:** rate-limited payments with a spending cap.
+- **Trading automation:** protocol-only swaps with a max amount per trade.
+- **Payroll:** only allow transfers to a fixed set of addresses.
