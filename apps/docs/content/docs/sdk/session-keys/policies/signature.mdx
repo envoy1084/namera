@@ -1,4 +1,50 @@
 ---
 title: Signature Policy
+description: Restrict which contracts can validate messages signed by a session key.
+keywords: signature policy, signature caller, session keys, permits, zerodev, namera, account abstraction
 ---
 
+## What this policy does
+
+The signature caller policy restricts **who can validate signed messages** produced by a session key. Only contracts in the `allowedCallers` allowlist can verify the signature. This is useful when you want to let a key sign offchain messages (permits, orders, approvals) but only for specific protocols.
+
+In practice, this prevents a delegated key from signing arbitrary messages that could be reused elsewhere. If the message is validated by a contract not in the allowlist, verification will fail.
+
+---
+
+## Code example
+
+```ts
+import { toSignatureCallerPolicy } from "@namera-ai/sdk/policy";
+
+const signaturePolicy = toSignatureCallerPolicy({
+  allowedCallers: [
+    "0xaddress1", // e.g. USDC permit contract
+    "0xaddress2", // e.g. a specific order book
+  ],
+});
+```
+
+Add the policy to the `policies` array when creating a session key. See [Create Session Key](/docs/sdk/session-keys/create) or [Create Passkey Session Key](/docs/sdk/session-keys/create-passkey-session-key) for the full flow.
+
+---
+
+## Real-world use cases
+
+- **Token permits only:** allow signing USDC `permit` messages but block everything else.
+- **Order‑only signing:** allow signatures that are validated by a single DEX or order book.
+- **Meta‑tx relays:** allow only a specific forwarder contract to validate signatures.
+
+---
+
+## When to use and when not to use
+
+Use when:
+
+- You need offchain signatures but only for known, trusted contracts.
+- You want to prevent signature reuse across unrelated protocols.
+
+Avoid when:
+
+- You need to sign messages for many protocols and cannot maintain an allowlist.
+- Your workflow only uses onchain calls (use call policy instead).
