@@ -20,6 +20,10 @@
     "vitest": "^4.1.0"
   },
   "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
     "./account": {
       "import": "./dist/account.js",
       "types": "./dist/account.d.ts"
