@@ -1,4 +1,78 @@
 ---
 title: Rate Limit Policy
+description: Limit how frequently a session key can send UserOps.
+keywords: rate limit policy, throttling, session keys, permissions, zerodev, namera, account abstraction
 ---
 
+## What this policy does
+
+The rate limit policy throttles how often a session key can send UserOps. It enforces **one UserOp per interval**, for up to `count` intervals. This is ideal for recurring actions like subscriptions, periodic trades, or scheduled maintenance.
+
+If the session key tries to send more than one UserOp within the same interval, the additional UserOps are rejected.
+
+---
+
+## Code examples
+
+### Monthly subscription style limit
+
+Allow one UserOp every 30 days.
+
+```ts
+import { toRateLimitPolicy } from "@namera-ai/sdk/policy";
+
+const secondsInDay = 60 * 60 * 24;
+const interval = 30 * secondsInDay;
+
+const rateLimitPolicy = toRateLimitPolicy({
+  count: 1,
+  interval,
+});
+```
+
+### Start in the future
+
+Block usage until a specific start time, then allow one UserOp per hour.
+
+```ts
+import { toRateLimitPolicy } from "@namera-ai/sdk/policy";
+
+const startAt = Math.floor(Date.parse("2026-01-01T00:00:00Z") / 1000);
+const oneHour = 60 * 60;
+
+const rateLimitPolicy = toRateLimitPolicy({
+  count: 1,
+  interval: oneHour,
+  startAt,
+});
+```
+
+Add the policy to the `policies` array when creating a session key. See [Create Session Key](/docs/sdk/session-keys/create) or [Create Passkey Session Key](/docs/sdk/session-keys/create-passkey-session-key) for the full flow.
+
+**Argument behavior:**
+
+- `count` is the number of intervals available (one UserOp per interval).
+- `interval` is the length of each interval in seconds.
+- `startAt` sets when the limit starts. If omitted, the policy is active immediately.
+
+---
+
+## Real-world use cases
+
+- **Subscriptions:** one payment per month for a SaaS plan.
+- **DCA bots:** one swap per day to average into a position.
+- **Maintenance jobs:** one cleanup call per hour on a vault or pool.
+
+---
+
+## When to use and when not to use
+
+Use when:
+
+- You need predictable, periodic execution.
+- You want to throttle an agent and prevent spamming.
+
+Avoid when:
+
+- The workflow needs bursty or high frequency execution.
+- You already enforce strict call limits and rate limiting is unnecessary.
