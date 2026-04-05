@@ -1,4 +1,257 @@
 ---
 title: Call Policy
+description: Restrict which contracts, functions, and arguments a session key can call.
+keywords: call policy, contract allowlist, function allowlist, param constraints, session keys, zerodev, namera
 ---
 
+## What this policy does
+
+The call policy is the core permissioning tool for session keys. It limits **which targets** can be called (EOA or contract), **which functions** can be invoked, **how much native value** can be sent, and **what argument values** are allowed. Every UserOp is checked against these rules before execution.
+
+If a call is outside the allowlist, uses the wrong function, sends too much ETH, or passes disallowed arguments, the UserOp is rejected.
+
+---
+
+## Parameters
+
+The call policy is built from a list of `permissions`. Each permission is one allowlist rule. You can include multiple permissions to cover multiple contracts or functions.
+
+### `target`
+
+The address a UserOp is allowed to call.
+
+- Set to a specific address to lock the rule to one contract/EOA.
+- Use `zeroAddress` to allow any target **as long as the ABI/function rules match**.
+
+### `valueLimit`
+
+Maximum native token value (wei) that can be sent with the call. Use `0n` to disallow native value entirely.
+
+### `abi`
+
+Contract ABI used to decode calldata and enforce function/argument constraints. Required when you want to restrict by `functionName` or `args`.
+
+### `functionName`
+
+Restrict the call to a specific function name. If the ABI contains multiple overloads, use `selector` to disambiguate.
+
+### `selector`
+
+Function selector for overloaded functions. Use `toFunctionSelector` if you need to target a specific signature.
+
+### `args`
+
+An array of argument conditions in the same order as the function signature. Use `null` for arguments you do not want to constrain. Each condition supports:
+
+- `condition`: operator (`EQUAL`, `NOT_EQUAL`, `GREATER_THAN`, `LESS_THAN`, `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`, `SLICE_EQUAL`)
+- `value`: the required value to compare against
+- `start` / `length` (only for `SLICE_EQUAL`): byte ranges for tuple/packed args
+
+### `operation`
+
+Whether the policy allows a `call` or `delegatecall`. Defaults to `call`.
+
+---
+
+## Code examples
+
+### Allow ETH transfers to one EOA
+
+Allow only simple transfers to a single recipient, capped at 0.05 ETH per call.
+
+```ts
+import { CallPolicyVersion, toCallPolicy } from "@namera-ai/sdk/policy";
+import { parseEther } from "viem";
+
+const policy = toCallPolicy({
+  permissions: [
+    {
+      target: "0xc0d86456F6f2930b892f3DAD007CDBE32c081FE6", // recipient EOA
+      valueLimit: parseEther("0.05"),
+    },
+  ],
+  policyVersion: CallPolicyVersion.V0_0_5,
+});
+```
+
+### Allow only a specific ERC20 transfer
+
+Allow `transfer(address to, uint256 amount)` on a single token, limited to 100 USDC per call.
+
+```ts
+import {
+  CallPolicyVersion,
+  ParamCondition,
+  toCallPolicy,
+} from "@namera-ai/sdk/policy";
+import { erc20Abi, parseUnits } from "viem";
+
+const usdcPolicy = toCallPolicy({
+  permissions: [
+    {
+      target: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
+      abi: erc20Abi,
+      functionName: "transfer",
+      args: [
+        null, // recipient is unconstrained
+        {
+          condition: ParamCondition.LESS_THAN_OR_EQUAL,
+          value: parseUnits("100", 6),
+        },
+      ],
+      valueLimit: 0n,
+    },
+  ],
+  policyVersion: CallPolicyVersion.V0_0_5,
+});
+```
+
+### Allow any contract that matches an ABI
+
+Set `target` to `zeroAddress` to allow calls to any contract **as long as** the ABI and function constraints match. This is useful for protocol families that deploy identical contracts.
+
+```ts
+import { CallPolicyVersion, toCallPolicy } from "@namera-ai/sdk/policy";
+import { zeroAddress } from "viem";
+
+const policy = toCallPolicy({
+  permissions: [
+    {
+      target: zeroAddress,
+      abi: [
+        {
+          type: "function",
+          name: "deposit",
+          inputs: [{ name: "amount", type: "uint256" }],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+      ] as const,
+      functionName: "deposit",
+      valueLimit: 0n,
+    },
+  ],
+  policyVersion: CallPolicyVersion.V0_0_5,
+});
+```
+
+### Uniswap exactInputSingle swap policy
+
+Allow only `exactInputSingle` swaps on the Uniswap SwapRouter, restricted to WETH → USDC on the 0.3% fee tier. This example uses `SLICE_EQUAL` to validate the tuple encoded params.
+
+```ts
+import {
+  CallPolicyVersion,
+  ParamCondition,
+  toCallPolicy,
+} from "@namera-ai/sdk/policy";
+import { parseEther } from "viem";
+
+const uniswapExactInputSingleAbi = [
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "tokenIn", type: "address" },
+          { internalType: "address", name: "tokenOut", type: "address" },
+          { internalType: "uint24", name: "fee", type: "uint24" },
+          { internalType: "address", name: "recipient", type: "address" },
+          { internalType: "uint256", name: "deadline", type: "uint256" },
+          { internalType: "uint256", name: "amountIn", type: "uint256" },
+          {
+            internalType: "uint256",
+            name: "amountOutMinimum",
+            type: "uint256",
+          },
+          {
+            internalType: "uint160",
+            name: "sqrtPriceLimitX96",
+            type: "uint160",
+          },
+        ],
+        internalType: "struct ISwapRouter.ExactInputSingleParams",
+        name: "params",
+        type: "tuple",
+      },
+    ],
+    name: "exactInputSingle",
+    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
+    stateMutability: "payable",
+    type: "function",
+  },
+] as const;
+
+// tokenIn (address) -> padded to 32 bytes
+// tokenOut (address) -> padded to 32 bytes
+// fee (uint24) -> padded to 32 bytes
+// recipient (address) -> padded to 32 bytes
+// deadline (uint256) -> exactly 32 bytes
+// amountIn (uint256) -> exactly 32 bytes
+// amountOutMinimum (uint256) -> exactly 32 bytes
+// sqrtPriceLimitX96 (uint160) -> padded to 32 bytes
+
+// Params Layout
+// | tokenIn (32) |
+// | tokenOut (32) |
+// | fee (32) |
+// | recipient (32) |
+// | deadline (32) |
+// | amountIn (32) |
+// | amountOutMinimum (32) |
+// | sqrtPriceLimitX96 (32) |
+
+const swapPolicy = toCallPolicy({
+  permissions: [
+    {
+      target: "0xE592427A0AEce92De3Edee1F18E0157C05861564", // Uniswap SwapRouter
+      abi: uniswapExactInputSingleAbi,
+      functionName: "exactInputSingle",
+      args: [
+        {
+          condition: ParamCondition.SLICE_EQUAL,
+          start: 0,
+          length: 96,
+          value: {
+            tokenIn: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH
+            tokenOut: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
+            fee: 300,
+            // Only Above 3 fields will be checked
+            amountIn: 0n,
+            amountOutMinimum: 0n,
+            deadline: 0n,
+            recipient: "0x0",
+            sqrtPriceLimitX96: 0n,
+          },
+        },
+      ],
+      valueLimit: parseEther("0"),
+    },
+  ],
+  policyVersion: CallPolicyVersion.V0_0_5,
+});
+```
+
+Add the policy to the `policies` array when creating a session key. See [Create Session Key](/docs/sdk/session-keys/create) or [Create Passkey Session Key](/docs/sdk/session-keys/create-passkey-session-key) for the full flow.
+
+---
+
+## Real-world use cases
+
+- **Token allowances:** allow only `permit` or `transfer` on a specific ERC20.
+- **DEX automation:** allow only swap functions on a known router with limits on `amountIn`.
+- **Vault deposits:** allow deposits to a single vault contract with a hard cap.
+- **Protocol families:** allow a common ABI across multiple deployed pools.
+
+---
+
+## When to use and when not to use
+
+Use when:
+
+- You need strong, fine grained restrictions on what a session key can do.
+- You are delegating access to third party agents or integrations.
+
+Avoid when:
+
+- You need unrestricted behavior (use sudo policy instead).
+- Your workflow is entirely offchain (use signature policy instead).
