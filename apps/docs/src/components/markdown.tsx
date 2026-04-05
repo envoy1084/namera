@@ -119,11 +119,18 @@ export function Markdown({ text }: { text: string }) {
   );
 }
 
+const MAX_CACHE = 200;
 const cache = new Map<string, Promise<ReactNode>>();
 
 function Renderer({ text }: { text: string }) {
   const result = cache.get(text) ?? processor.process(text);
-  cache.set(text, result);
-
+  if (!cache.has(text)) {
+    if (cache.size >= MAX_CACHE) {
+      // evict the oldest entry
+      // biome-ignore lint/style/noNonNullAssertion: safe
+      cache.delete(cache.keys().next().value!);
+    }
+    cache.set(text, result);
+  }
   return use(result);
 }
