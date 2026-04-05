@@ -11,7 +11,7 @@
     "@zerodev/webauthn-key": "^5.5.0",
     "@zerodev/weighted-validator": "^5.5.1"
   },
-  "description": "",
+  "description": "Namera SDK is a TypeScript library for building with smart accounts, issuing scoped session keys, and executing transactions across chains.",
   "devDependencies": {
     "@namera-ai/config": "workspace:*",
     "@types/node": "^25.5.0",
@@ -49,8 +49,24 @@
       "types": "./dist/types.d.ts"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "homepage": "https://github.com/thenamespace/namera#readme",
-  "keywords": [],
+  "keywords": [
+    "ethereum",
+    "smart-accounts",
+    "session-keys",
+    "account-abstraction",
+    "zerodev",
+    "erc-4337",
+    "passkey",
+    "multichain",
+    "agents",
+    "automation",
+    "namera"
+  ],
   "license": "Apache-2.0",
   "name": "@namera-ai/sdk",
   "peerDependencies": {
