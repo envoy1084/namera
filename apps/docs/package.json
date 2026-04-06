@@ -55,8 +55,8 @@
   "name": "@namera-ai/docs",
   "private": true,
   "scripts": {
-    "build": "NODE_OPTIONS='--max-old-space-size=6144' bun run --bunx vite build",
-    "dev": "bun run --bunx vite dev",
+    "build": "NODE_OPTIONS='--max-old-space-size=6144' vite build",
+    "dev": "vite dev",
     "start": "PORT=4000 node .output/server/index.mjs",
     "test": "vitest run"
   },

@@ -58,7 +58,7 @@ Full documentation is available at [namera.ai/docs](https://namera.ai/docs).
 ### Prerequisites
 
 - **Node.js 18+**
-- **Bun**: [install guide](https://bun.sh/docs/installation)
+- **pnpm**: `npm install -g pnpm`
 
 ### Installation
 
@@ -67,7 +67,7 @@ Clone the repository and install dependencies:
 ```bash
 gh repo clone thenamespace/namera
 cd namera
-bun install
+pnpm install
 ```
 
 ### Development
@@ -75,20 +75,20 @@ bun install
 Start all apps in development mode:
 
 ```bash
-bun run dev
+pnpm run dev
 ```
 
 Build all packages and apps:
 
 ```bash
-bun run build
+pnpm run build
 ```
 
 Lint and format:
 
 ```bash
-bun run lint
-bun run lint:check
+pnpm run lint
+pnpm run lint:check
 ```
 
 ## Contributing
@@ -98,9 +98,9 @@ Contributions are welcome. Please read the guidelines below before submitting a 
 ### Development Workflow
 
 1. Fork the repository and create a branch for your changes
-2. Install dependencies with `bun install`
+2. Install dependencies with `pnpm install`
 3. Make your changes and ensure tests pass
-4. Run linting with `bun run lint`
+4. Run linting with `pnpm run lint`
 5. Open a pull request against `main`
 
 All PRs should:
@@ -144,14 +144,14 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 To version packages:
 
 ```bash
-bun run changeset
-bun run version
+pnpm run changeset
+pnpm run version
 ```
 
 To publish:
 
 ```bash
-bun run release
+pnpm run release
 ```
 
 Changesets will guide you through selecting the version bump (major, minor, patch) for each package. The CI pipeline handles publishing on merge to `main` when a release PR is merged.

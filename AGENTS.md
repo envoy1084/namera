@@ -4,7 +4,7 @@ Namera is a programmable session key layer for smart wallets. It enables wallets
 
 
 ## Core Stack
-- **Runtime & Package Manager:** Bun
+- **Runtime & Package Manager:** pnpm
 - **Monorepo Tooling:** Turborepo
 - **Core Paradigm:** Functional Programming using Effect v3 `effect`
 
@@ -32,9 +32,9 @@ Namera is a programmable session key layer for smart wallets. It enables wallets
 - **Database:** All database interactions must use the Drizzle ORM + Effect Adapter. Yield database operations within the Effect context.
 
 ## Monorepo & Tooling Rules
-- **Package Manager:** Use `bun` exclusively.
-- **Workspace Targeting:** When installing dependencies for a specific package, use `bun add <pkg> --filter <workspace>`.
-- **Formatting:** Do not meticulously format code manually. Run `bun run lint` to format via Biome after edits.
+- **Package Manager:** Use `pnpm` exclusively.
+- **Workspace Targeting:** When installing dependencies for a specific package, use `pnpm add <pkg> --filter <workspace>`.
+- **Formatting:** Do not meticulously format code manually. Run `pnpm run lint` to format via Biome after edits.
 
 ---
 
@@ -46,5 +46,5 @@ Namera is a programmable session key layer for smart wallets. It enables wallets
 - **Pattern Matching:** Always analyze existing files in the repository to match established patterns before proposing new structures.
 
 ## Mandatory Actions
-1. **Post-Edit:** Always run `bun run lint` after modifying any file.
-2. **Post-Install:** Always run `bun install` at the root if modifying `package.json`.****
+1. **Post-Edit:** Always run `pnpm run lint` after modifying any file.
+2. **Post-Install:** Always run `pnpm install` at the root if modifying `package.json`.****
