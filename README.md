@@ -84,6 +84,14 @@ Build all packages and apps:
 pnpm run build
 ```
 
+To build a specific package or app:
+
+```bash
+pnpm run build --filter=@namera-ai/sdk
+# or
+pnpm run build --filter=@namera-ai/cli
+```
+
 Lint and format:
 
 ```bash
@@ -145,16 +153,9 @@ To version packages:
 
 ```bash
 pnpm run changeset
-pnpm run version
 ```
 
-To publish:
-
-```bash
-pnpm run release
-```
-
-Changesets will guide you through selecting the version bump (major, minor, patch) for each package. The CI pipeline handles publishing on merge to `main` when a release PR is merged.
+Changesets will guide you through selecting the version bump (major, minor, patch) for each package. The CI pipeline handles publishing when a release PR is merged, and approved by a maintainer.
 
 ## Security
 

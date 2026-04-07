@@ -51,10 +51,12 @@ Build from source:
 ```bash
 gh repo clone thenamespace/namera
 cd namera
-bun install
+pnpm install
 cd apps/cli
-bun run build
-bun run start -- --help
+pnpm run build
+pnpm run start -- --help
+# or link to global install
+pnpm link
 ```
 
 ## Quick Start
@@ -141,7 +143,7 @@ namera session-key create --params '{"alias":"my-session-key","smartAccountAlias
 All commands support global output flags:
 
 - `--output`, `-o`: `pretty` (default), `json`, or `ndjson`
-- `--quite`, `-q`: Suppress output entirely
+- `--quiet`, `-q`: Suppress output entirely
 
 ```bash
 namera smart-account list --output json
