@@ -89,7 +89,7 @@ export const getGithubReleases = createServerFn({ method: "GET" }).handler(
     const messages = releases
       ?.filter((release) => !release.prerelease)
       .map((release) => {
-        const content = getContent(release.body);
+        const content = getContent(release.body ?? "");
         const lineCount = content
           .split("\n")
           .filter((l) => l.trim().length > 0).length;
