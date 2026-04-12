@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Navbar } from "@/components";
+import { Hero, Products } from "@/sections";
 
 // import { Hr } from "@/components/misc";
 // import { CallToAction, Faqs, Hero, HowItWorks, UseCases } from "@/sections";
@@ -10,6 +11,9 @@ const Home = () => {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#08090a]">
       <Navbar />
+      <Hero />
+      <Products />
+      <div className="h-dvh" />
       {/* <Hero />
       <Hr />
       <Products />

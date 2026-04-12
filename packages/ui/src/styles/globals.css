@@ -4,7 +4,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 @source "../../../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
 
 :root {
@@ -110,7 +109,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 antialiased;
   }
   body {
     letter-spacing: var(--tracking-normal);
@@ -119,9 +118,15 @@
   html {
     @apply font-sans;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+
+  ::selection {
+    color: var(--color-primary-foreground);
+    background-color: --alpha(var(--color-primary) / 25%);
   }
 }
 

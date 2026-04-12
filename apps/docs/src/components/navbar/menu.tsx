@@ -18,7 +18,7 @@ export const Menu = () => {
         <NavigationMenuItem className="hidden sm:flex">
           <NavigationMenuTrigger>Product</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="w-lg bg-neutral-600/10 h-32 rounded-lg border-[0.5px] backdrop-blur-sm" />
+            <ul className="w-lg bg-neutral-500/10 h-32 rounded-lg border-[0.5px] backdrop-blur-sm" />
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem className="hidden sm:flex">
