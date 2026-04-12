@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Footer, Navbar } from "@/components";
-import { Hr } from "@/components/misc";
-import { CallToAction, Faqs, Hero, HowItWorks, UseCases } from "@/sections";
-import { Products } from "@/sections/products";
+import { Navbar } from "@/components";
+
+// import { Hr } from "@/components/misc";
+// import { CallToAction, Faqs, Hero, HowItWorks, UseCases } from "@/sections";
+// import { Products } from "@/sections/products";
 
 const Home = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-[#08090a]">
       <Navbar />
-      <Hero />
+      {/* <Hero />
       <Hr />
       <Products />
       <Hr />
@@ -20,7 +21,7 @@ const Home = () => {
       <Faqs />
       <Hr />
       <CallToAction />
-      <Footer />
+      <Footer /> */}
     </div>
   );
 };

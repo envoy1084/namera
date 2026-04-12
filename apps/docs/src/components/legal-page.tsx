@@ -12,7 +12,7 @@ import type { ReadingTimeResult } from "@/types";
 
 import { Footer } from "./footer";
 import { getMDXComponents } from "./mdx-components";
-import { Navbar } from "./navbar";
+import { Navbar } from "./navbar1";
 
 export type LegalPageMetadata = {
   description: string | undefined;
