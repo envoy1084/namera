@@ -21,6 +21,7 @@ export const Hero = () => {
             disablePictureInPicture={true}
             loop={true}
             muted={true}
+            poster="https://6iw07yybtp.ufs.sh/f/9tvkThgRlUcK8urJOvLOaQlLduTRAgwbGEzMkpcHBZnDfY9P"
             src="https://6iw07yybtp.ufs.sh/f/9tvkThgRlUcKlPJKvydv8A6jcXM3ehpNnSUiG7f0Vs2glHFW"
           />
         </div>
