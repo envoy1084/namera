@@ -32,7 +32,6 @@ export const generateDocsSeo = (metadata: DocsMetadata) => {
   const paths = ["Documentation", category].filter(Boolean).join(",");
 
   const ogImage = new URL("/api/og", baseUrl);
-  ogImage.searchParams.set("type", "docs");
   ogImage.searchParams.set("description", metadata.description ?? "");
   ogImage.searchParams.set("lastUpdatedDate", dateModified);
   ogImage.searchParams.set("paths", paths);

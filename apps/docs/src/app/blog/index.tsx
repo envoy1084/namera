@@ -44,7 +44,6 @@ const serverLoader = createServerFn({
         image = page.data.image;
       } else {
         const ogImage = new URL("/api/og", env.baseUrl);
-        ogImage.searchParams.set("type", "blog");
         ogImage.searchParams.set("description", page.data.description ?? "");
         ogImage.searchParams.set("lastUpdatedDate", dateModified.toISOString());
         ogImage.searchParams.set("paths", "Blog");
