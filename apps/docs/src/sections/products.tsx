@@ -1,6 +1,5 @@
 const products = [
   {
-    color: "#ffa16c",
     description:
       "Manage wallets, session keys, and agent access — no backend required.",
     key: "platform",
@@ -9,7 +8,6 @@ const products = [
     statSub: "Less overhead",
   },
   {
-    color: "#b6d6ff",
     description: "Add programmable wallets to any app or agent workflow.",
     key: "sdk",
     label: "SDK",
@@ -17,7 +15,6 @@ const products = [
     statSub: "Integration time",
   },
   {
-    color: "#d6fe51",
     description: "Operate wallets via CLI or MCP. Full local control.",
     key: "cli",
     label: "CLI",
@@ -31,7 +28,7 @@ type Product = (typeof products)[number];
 const ProductCard = (product: Product) => {
   return (
     <div
-      className="group relative flex w-full max-w-xs flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.04]"
+      className="group relative flex w-full max-w-xs flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-sm transition-all duration-300 ease-out"
       style={{
         boxShadow:
           "0 0 0 1px rgba(255,255,255,0.02), 0 8px 24px -12px rgba(0,0,0,0.6)",
@@ -40,44 +37,36 @@ const ProductCard = (product: Product) => {
       {/* Top gradient accent line */}
       <div
         aria-hidden={true}
-        className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+        className="absolute inset-x-0 top-0 h-px opacity-60"
         style={{
-          background: `linear-gradient(90deg, transparent 0%, ${product.color} 50%, transparent 100%)`,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
         }}
       />
       {/* Colored radial glow on hover */}
       <div
         aria-hidden={true}
-        className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
+        className="pointer-events-none absolute top-6 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full opacity-0 blur-2xl"
         style={{
-          backgroundColor: product.color,
+          backgroundColor: "rgba(255,255,255,0.45)",
         }}
       />
 
       <div className="relative p-6 h-56">
         <div className="flex flex-row items-start gap-4">
           <div
-            className="h-16 w-0.5 rounded-full transition-all duration-300 group-hover:h-20 group-hover:w-1"
+            className="h-16 w-0.5 rounded-full"
             style={{
-              backgroundColor: product.color,
-              boxShadow: `0 0 12px ${product.color}80`,
+              backgroundColor: "rgba(255,255,255,0.7)",
+              boxShadow: "0 0 12px rgba(255,255,255,0.14)",
             }}
           />
           <div className="flex flex-col gap-3">
-            <span
-              className="text-[10px] font-medium uppercase tracking-[0.2em]"
-              style={{ color: product.color }}
-            >
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/55">
               {product.label}
             </span>
             <div className="flex flex-col gap-0">
-              <span
-                className="text-4xl font-semibold tracking-tight"
-                style={{
-                  color: product.color,
-                  textShadow: `0 0 24px ${product.color}40`,
-                }}
-              >
+              <span className="text-4xl font-semibold tracking-tight text-white/88">
                 {product.stat}
               </span>
               <span className="text-sm text-muted-foreground mt-1">
@@ -87,7 +76,7 @@ const ProductCard = (product: Product) => {
           </div>
         </div>
       </div>
-      <div className="relative p-6 border-t border-white/10 text-sm text-muted-foreground leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+      <div className="relative border-t border-white/10 p-6 text-sm leading-relaxed text-muted-foreground">
         {product.description}
       </div>
     </div>

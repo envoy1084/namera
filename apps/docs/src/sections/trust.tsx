@@ -7,7 +7,6 @@ import {
 } from "@phosphor-icons/react";
 
 type Pillar = {
-  accent: string;
   description: string;
   icon: typeof ShieldCheckIcon;
   key: string;
@@ -16,28 +15,24 @@ type Pillar = {
 
 const pillars: Pillar[] = [
   {
-    accent: "#d6fe51",
     description: "Your private keys never leave your device.",
     icon: KeyIcon,
     key: "custody",
     title: "No Key Custody",
   },
   {
-    accent: "#d6fe51",
     description: "Rules live onchain. No server to hack, no rule to bypass.",
     icon: ShieldCheckIcon,
     key: "onchain",
     title: "Onchain Enforcement",
   },
   {
-    accent: "#b6d6ff",
     description: "ZeroDev's audited ERC-4337 account abstraction underneath.",
     icon: CubeTransparentIcon,
     key: "zerodev",
     title: "Built on ZeroDev",
   },
   {
-    accent: "#ffa16c",
     description: "Read the code, audit it, contribute. No black boxes.",
     icon: CodeIcon,
     key: "oss",
@@ -49,7 +44,7 @@ const PillarCard = ({ pillar }: { pillar: Pillar }) => {
   const Icon = pillar.icon;
   return (
     <div
-      className="group relative flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.04]"
+      className="group relative flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300"
       style={{
         boxShadow:
           "0 0 0 1px rgba(255,255,255,0.02), 0 8px 24px -12px rgba(0,0,0,0.6)",
@@ -57,26 +52,23 @@ const PillarCard = ({ pillar }: { pillar: Pillar }) => {
     >
       <div
         aria-hidden={true}
-        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-50 transition-opacity group-hover:opacity-100"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-50"
         style={{
-          background: `linear-gradient(90deg, transparent, ${pillar.accent}, transparent)`,
+          background:
+            "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
         }}
       />
       <div
         aria-hidden={true}
-        className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-15"
-        style={{ backgroundColor: pillar.accent }}
+        className="pointer-events-none absolute top-6 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full opacity-0 blur-2xl"
+        style={{ backgroundColor: "rgba(255,255,255,0.45)" }}
       />
 
       <div
-        className="relative flex size-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] transition-colors duration-300 group-hover:border-white/20"
-        style={{ boxShadow: `0 0 20px ${pillar.accent}20` }}
+        className="relative flex size-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03]"
+        style={{ boxShadow: "0 0 20px rgba(255,255,255,0.06)" }}
       >
-        <Icon
-          className="size-6 transition-transform duration-300 group-hover:scale-110"
-          style={{ color: pillar.accent }}
-          weight="duotone"
-        />
+        <Icon className="size-6 text-white/80" weight="duotone" />
       </div>
 
       <div className="relative flex flex-col gap-2">
@@ -124,21 +116,18 @@ export const Trust = () => {
         className="pointer-events-none absolute inset-x-0 top-20 mx-auto h-64 max-w-3xl blur-3xl opacity-30"
         style={{
           background:
-            "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(214,254,81,0.1), transparent 70%)",
+            "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.06), transparent 70%)",
         }}
       />
 
       <div className="relative flex flex-col gap-4">
-        <div className="flex items-center justify-center gap-2">
-          <ShieldCheckIcon className="size-4 text-[#d6fe51]" weight="duotone" />
+        <div className="flex items-center justify-center">
           <p className="text-center text-xs font-medium uppercase tracking-[0.25em] text-white/40">
             Security & Trust
           </p>
         </div>
         <h2 className="heading-gradient mx-auto max-w-3xl pb-2 text-center text-3xl tracking-tight sm:text-4xl md:text-5xl">
           Built on audited infrastructure.
-          <br />
-          Enforced onchain.
         </h2>
       </div>
 

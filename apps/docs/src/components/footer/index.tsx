@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
 import { NameraIcon } from "@namera-ai/ui/icons";
-import { cn } from "@namera-ai/ui/lib/utils";
 
 const navigationGroups = [
   {
@@ -97,19 +96,12 @@ export const Footer = ({ showDesign = true }: { showDesign?: boolean }) => {
                 Namera
               </div>
             </div>
-            <p className="text-muted-foreground text-xs max-w-xs text-center md:text-left leading-relaxed">
+            <p className="max-w-sm text-center text-sm leading-relaxed text-muted-foreground md:text-left md:text-base">
               Secure, programmable smart accounts for autonomous agents.
             </p>
-            {/* Subtle status pill */}
-            <div className="flex justify-center md:justify-start">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] text-white/60">
-                <span className="relative flex size-1.5">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#d6fe51] opacity-50" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-[#d6fe51]" />
-                </span>
-                All systems operational
-              </span>
-            </div>
+            <p className="text-center text-[11px] text-muted-foreground/80 md:text-left">
+              © 2026 Namespace Inc. All rights reserved.
+            </p>
           </div>
           <div className="grid sm:grid-cols-3 md:gap-4 grid-cols-2 mx-auto gap-8 order-1 md:order-2 md:mx-0">
             {navigationGroups.map((group) => {
@@ -155,15 +147,12 @@ export const Footer = ({ showDesign = true }: { showDesign?: boolean }) => {
         </div>
       </footer>
       <div
-        className={cn(
-          "max-w-7xl justify-center md:justify-end flex mx-auto w-full text-xs text-muted-foreground",
+        className={
           showDesign
-            ? "pb-[10dvh] sm:pb-[15dvh] md:pb-[20dvh] px-4 lg:pb-[25dvh]"
-            : "pb-4",
-        )}
-      >
-        © 2026 Namespace Inc. All rights reserved.
-      </div>
+            ? "pb-[10dvh] sm:pb-[15dvh] md:pb-[20dvh] lg:pb-[25dvh]"
+            : "pb-4"
+        }
+      />
       {showDesign && (
         <div className="absolute bottom-0 left-1/2 overflow-hidden -translate-x-1/2 pointer-events-none w-full flex justify-center">
           {/* Ambient glow behind giant text */}

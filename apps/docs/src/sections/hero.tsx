@@ -1,6 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export const Hero = () => {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = window.setTimeout(() => {
+      setCopied(false);
+    }, 1600);
+
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
+
   return (
     <section className="relative pt-[18dvh] pb-[8dvh] overflow-hidden">
       {/* Ambient radial glow behind headline */}
@@ -27,28 +41,7 @@ export const Hero = () => {
 
       <div className="relative max-w-7xl mx-auto flex flex-col gap-6 px-4">
         <div className="flex flex-col gap-7 text-center sm:text-left">
-          {/* Eyebrow badge */}
-          <div className="self-center sm:self-start">
-            <a
-              className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/70 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-              href="/changelog"
-            >
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#d6fe51] opacity-60" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-[#d6fe51]" />
-              </span>
-              <span className="font-medium tracking-wide">Now in beta</span>
-              <span className="h-3 w-px bg-white/15" />
-              <span className="text-white/50 group-hover:text-white/80 transition-colors">
-                Agent-native infrastructure
-              </span>
-              <span className="text-white/40 transition-transform group-hover:translate-x-0.5">
-                →
-              </span>
-            </a>
-          </div>
-
-          <h1 className="text-4xl leading-none sm:text-5xl md:text-6xl lg:text-7xl md:leading-[0.9] text-balance tracking-tight font-medium bg-gradient-to-b from-white via-white to-white/60 bg-clip-text text-transparent">
+          <h1 className="pb-2 text-4xl leading-[0.96] sm:text-5xl md:text-6xl lg:text-7xl md:leading-[0.92] text-balance tracking-tight font-medium bg-gradient-to-b from-white via-white to-white/60 bg-clip-text text-transparent">
             Programmable wallets
             <br />
             for autonomous agents
@@ -63,44 +56,62 @@ export const Hero = () => {
               can't break.
             </span>
           </p>
-          <div className="inline-flex items-stretch rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden backdrop-blur-sm self-center sm:self-start shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_-8px_rgba(0,0,0,0.6)] hover:border-white/15 transition-colors">
+          <div className="inline-flex items-stretch overflow-hidden self-center rounded-2xl border border-white/10 bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_-8px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:self-start">
             <div className="flex items-center px-4 py-3 border-r border-white/10">
               <span className="text-white/30 text-xs uppercase tracking-widest font-medium whitespace-nowrap">
                 Install
               </span>
             </div>
             <button
-              className="group flex items-center gap-3 px-4 py-3 font-mono text-sm text-white/60 hover:text-white/90 transition-colors border-r border-white/10"
-              onClick={() => {
-                navigator.clipboard.writeText("npm i -g @namera-ai/cli");
+              className="group flex items-center gap-3 border-r border-white/10 px-4 py-3 font-mono text-sm text-white/60 transition-colors hover:bg-white/[0.04] hover:text-white/90"
+              onClick={async () => {
+                await navigator.clipboard.writeText("npm i -g @namera-ai/cli");
+                setCopied(true);
               }}
               title="Click to copy"
               type="button"
             >
               npm i -g @namera-ai/cli
-              <svg
-                aria-hidden={true}
-                className="shrink-0 text-white/25 group-hover:text-white/50 transition-colors"
-                fill="none"
-                height="13"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="13"
-              >
-                <rect height="13" rx="2" width="13" x="9" y="9" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
+              {copied ? (
+                <svg
+                  aria-hidden={true}
+                  className="shrink-0 text-white/60 transition-colors"
+                  fill="none"
+                  height="13"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="13"
+                >
+                  <path d="m20 6-11 11-5-5" />
+                </svg>
+              ) : (
+                <svg
+                  aria-hidden={true}
+                  className="shrink-0 text-white/25 transition-colors group-hover:text-white/50"
+                  fill="none"
+                  height="13"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="13"
+                >
+                  <rect height="13" rx="2" width="13" x="9" y="9" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              )}
             </button>
             <div className="flex items-center divide-x divide-white/10">
               <a
-                className="flex items-center gap-1 px-4 py-3 text-sm text-white/50 hover:text-white/90 transition-colors whitespace-nowrap"
+                className="flex items-center gap-1 px-4 py-3 text-sm text-white/50 whitespace-nowrap transition-colors hover:bg-white/[0.04] hover:text-white/90"
                 href="/docs"
               >
                 Docs <span>→</span>
               </a>
               <a
-                className="flex items-center gap-1 px-4 py-3 text-sm text-white/50 hover:text-white/90 transition-colors whitespace-nowrap"
+                className="flex items-center gap-1 px-4 py-3 text-sm text-white/50 whitespace-nowrap transition-colors hover:bg-white/[0.04] hover:text-white/90"
                 href="/quickstart"
               >
                 Video Demo <span>→</span>

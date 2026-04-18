@@ -25,9 +25,9 @@ const Home = () => {
       <Products />
       <McpSection />
       <UseCases />
-      <WhyNamera />
       <Trust />
       <Integrate />
+      <WhyNamera />
       <Faqs />
       <Footer />
     </div>

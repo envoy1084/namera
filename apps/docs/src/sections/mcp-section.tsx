@@ -40,7 +40,7 @@ const CommandBlock = () => {
         className="pointer-events-none absolute inset-x-0 top-0 h-px"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(214,254,81,0.4), transparent)",
+            "linear-gradient(90deg, transparent, rgba(167,139,250,0.4), transparent)",
         }}
       />
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
@@ -58,10 +58,10 @@ const CommandBlock = () => {
       </div>
       <div className="flex flex-col gap-2 px-5 py-5 font-mono text-sm leading-relaxed">
         <div className="flex items-start gap-2">
-          <span className="select-none text-[#d6fe51]">$</span>
+          <span className="select-none text-violet-400">$</span>
           <div className="flex flex-wrap items-baseline gap-x-2">
             <span className="text-white">namera</span>
-            <span className="text-[#d6fe51]">mcp start</span>
+            <span className="text-violet-400">mcp start</span>
             <span className="text-white/50">--account</span>
             <span className="text-[#b6d6ff]">{"<address>"}</span>
             <span className="text-white/50">--session-key</span>
@@ -69,7 +69,7 @@ const CommandBlock = () => {
           </div>
         </div>
         <div className="mt-2 flex items-center gap-2 text-xs text-white/40">
-          <span className="size-1.5 animate-pulse rounded-full bg-[#d6fe51]" />
+          <span className="size-1.5 animate-pulse rounded-full bg-violet-400" />
           <span>MCP server listening · stdio transport</span>
         </div>
       </div>
@@ -100,7 +100,7 @@ export const McpSection = () => {
             className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[32rem] -translate-x-1/2 blur-3xl opacity-40"
             style={{
               background:
-                "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(214,254,81,0.18), transparent 70%)",
+                "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(167,139,250,0.18), transparent 70%)",
             }}
           />
 
@@ -112,7 +112,7 @@ export const McpSection = () => {
                 </p>
                 <h2 className="heading-gradient pb-2 text-3xl tracking-tight sm:text-4xl md:text-5xl">
                   Give your agent a wallet in{" "}
-                  <span className="text-[#d6fe51]">one command</span>.
+                  <span className="text-violet-400">one command</span>.
                 </h2>
                 <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
                   Namera ships a local MCP server. Drop it into Claude, GPT, or
@@ -151,18 +151,18 @@ export const McpSection = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* CAN do */}
               <div
-                className="relative flex flex-col gap-4 rounded-2xl border border-[#d6fe51]/20 bg-[#d6fe51]/[0.03] p-5 backdrop-blur-sm"
-                style={{ boxShadow: "inset 0 1px 0 rgba(214,254,81,0.08)" }}
+                className="relative flex flex-col gap-4 rounded-2xl border border-violet-400/20 bg-violet-400/[0.03] p-5 backdrop-blur-sm"
+                style={{ boxShadow: "inset 0 1px 0 rgba(167,139,250,0.08)" }}
               >
                 <div
                   aria-hidden={true}
-                  className="pointer-events-none absolute -top-16 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-[#d6fe51]/10 blur-3xl"
+                  className="pointer-events-none absolute -top-16 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-violet-400/10 blur-3xl"
                 />
                 <div className="relative flex items-center gap-2">
-                  <span className="inline-flex size-5 items-center justify-center rounded-full border border-[#d6fe51]/40 bg-[#d6fe51]/15 text-[#d6fe51]">
+                  <span className="inline-flex size-5 items-center justify-center rounded-full border border-violet-400/40 bg-violet-400/15 text-violet-400">
                     <CheckIcon className="size-3" weight="bold" />
                   </span>
-                  <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#d6fe51]">
+                  <span className="text-xs font-medium uppercase tracking-[0.2em] text-violet-400">
                     Agent can
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export const McpSection = () => {
                       className="flex items-start gap-2 leading-relaxed"
                       key={item}
                     >
-                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-[#d6fe51]" />
+                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-violet-400" />
                       <span>{item}</span>
                     </li>
                   ))}

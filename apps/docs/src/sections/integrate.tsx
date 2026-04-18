@@ -131,7 +131,7 @@ const IconComponent = ({ icon, index }: IconComponentProps) => {
   };
 
   return (
-    <Tooltip>
+    <Tooltip delay={0}>
       <TooltipTrigger>
         <motion.div
           className="group size-16 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm flex items-center justify-center transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06] hover:shadow-[0_12px_28px_-12px_rgba(0,0,0,0.8)]"
@@ -299,7 +299,7 @@ export const Integrate = () => {
           Supported Networks
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <div className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 flex items-center gap-2 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white/80">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 backdrop-blur-sm">
             <img
               alt="Ethereum"
               className="size-3.5 rounded-sm"
@@ -307,7 +307,7 @@ export const Integrate = () => {
             />
             <span>Ethereum</span>
           </div>
-          <div className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 flex items-center gap-2 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white/80">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 backdrop-blur-sm">
             <img
               alt="Base"
               className="size-3.5 rounded-sm"
@@ -315,18 +315,18 @@ export const Integrate = () => {
             />
             <span>Base</span>
           </div>
-          <div className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 flex items-center gap-2 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white/80">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 backdrop-blur-sm">
             <span>Polygon</span>
           </div>
-          <div className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 flex items-center gap-2 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white/80">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60 backdrop-blur-sm">
             <span>Arbitrum</span>
           </div>
         </div>
       </div>
 
-      <p className="relative text-center text-muted-foreground max-w-xl mx-auto px-4">
+      <p className="relative mx-auto max-w-6xl px-4 text-center text-muted-foreground md:whitespace-nowrap">
         Use Namera with the tools, chains, and payment systems you already rely
-        on
+        on.
       </p>
     </motion.section>
   );
