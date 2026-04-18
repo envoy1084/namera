@@ -1,4 +1,5 @@
 export * from "./footer";
+export * from "./hr";
 export * from "./legal-page";
 export * from "./mdx-components";
 export * from "./navbar";

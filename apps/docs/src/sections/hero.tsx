@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "@namera-ai/ui/components/ui/button";
 import { ButtonGroup } from "@namera-ai/ui/components/ui/button-group";
-import { ArrowRight, CopyIcon } from "lucide-react";
+import { ArrowRight, CheckIcon, CopyIcon } from "lucide-react";
 import { useCopyToClipboard } from "usehooks-ts";
 
 export const Hero = () => {
@@ -61,7 +61,11 @@ export const Hero = () => {
               <span className="font-geist-mono px-2">
                 npm i -g @namera-ai/cli
               </span>
-              <CopyIcon className="size-3.5" />
+              {copied ? (
+                <CheckIcon className="size-3.5" />
+              ) : (
+                <CopyIcon className="size-3.5" />
+              )}
             </Button>
             <Button
               className="rounded-xl group pr-4"
