@@ -99,8 +99,8 @@ export const Cta = () => {
           Start building.
         </h2>
         <p className="mx-auto max-w-md text-sm font-normal leading-relaxed text-muted-foreground md:text-base">
-          Everything you need to build, manage, and scale agent wallets — all in
-          one place.
+          Smart accounts, session keys, and onchain policies — all in one place,
+          ready for agents.
         </p>
       </motion.div>
 

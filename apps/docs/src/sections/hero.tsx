@@ -31,8 +31,8 @@ export const Hero = () => {
             for autonomous agents
           </h1>
           <p className="text-muted-foreground text-sm font-normal md:text-base max-w-4xl mx-auto sm:mx-0">
-            Define fine-grained permissions with session keys and let agents
-            execute transactions on your behalf.
+            Issue scoped session keys, attach onchain policies, and let agents
+            execute transactions within the limits you define.
           </p>
           <ButtonGroup className="max-w-full overflow-x-auto">
             <span className="flex items-center px-4 font-geist-mono text-xs text-white/30 border border-white/10 bg-white/[0.02] rounded-xl rounded-r-none border-r-0 select-none">

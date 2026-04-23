@@ -105,12 +105,6 @@ const FeatureCard = (feature: Feature) => {
             "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
         }}
       />
-      {/* Hover glow */}
-      <div
-        aria-hidden={true}
-        className="pointer-events-none absolute top-6 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-2xl"
-        style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-      />
 
       <div className="relative flex items-start justify-between">
         <div
@@ -153,7 +147,7 @@ export const Features = () => {
           Features
         </p>
         <h2 className="heading-gradient mx-auto max-w-3xl pb-2 text-center text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          Core capabilities
+          Built for agent-native execution
         </h2>
       </motion.div>
 

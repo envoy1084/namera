@@ -52,12 +52,12 @@ const industries = [
     bullets: [
       "Agents executing transactions on behalf of users",
       "Tool-using agents interacting with smart contracts",
-      "Autonomous workflows with built-in permissioning",
+      "Autonomous workflows with scoped permissions",
     ],
     icon: Robot,
     key: "ai",
     label: "AI Agents",
-    tagline: "Give agents the ability to act and operate onchain.",
+    tagline: "The permission layer for AI agent platforms.",
     title: "AI Agent Platforms",
   },
   {
@@ -94,7 +94,8 @@ const industries = [
     icon: GameController,
     key: "gaming",
     label: "Gaming",
-    tagline: "Enable agents to manage assets and actions in real time.",
+    tagline:
+      "Let agents control in-game assets, play, spend, and execute actions under defined rules.",
     title: "Gaming & Onchain Economies",
   },
 ];

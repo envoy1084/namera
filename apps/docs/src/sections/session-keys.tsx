@@ -21,7 +21,7 @@ const policyTable: PolicyTableRow[] = [
       "Restricts contract calls to specific targets, functions, and parameters",
     key: "call",
     name: "Call Policy",
-    useCase: "Most common, limits which contracts and functions can be called",
+    useCase: "Limit which contracts and functions an agent can call",
   },
   {
     description: "Caps total gas usage for a session key",

@@ -9,8 +9,8 @@ const products = [
       "Manage smart wallets, session keys, and agent access through a unified layer without running your own backend",
     key: "platform",
     label: "Platform",
-    stat: "90%",
-    statSub: "Less overhead",
+    stat: "1",
+    statSub: "Interface",
   },
   {
     color: "#b6d6ff",
@@ -19,7 +19,7 @@ const products = [
     key: "sdk",
     label: "SDK",
     stat: "5 min",
-    statSub: "Integration time",
+    statSub: "Integration",
   },
   {
     color: "#d6fe51",
@@ -28,7 +28,7 @@ const products = [
     key: "cli",
     label: "CLI",
     stat: "100%",
-    statSub: "Local Control",
+    statSub: "Local",
   },
 ];
 
@@ -122,7 +122,7 @@ export const Products = () => {
         className="text-3xl max-w-xl mx-auto text-center heading-gradient pb-2 sm:text-4xl md:text-5xl tracking-tight"
         variants={itemVariants}
       >
-        Everything you need to build agent wallets
+        The complete stack for agent wallets
       </motion.h2>
       <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto sm:grid-cols-2 md:grid-cols-3 justify-items-center w-full">
         {products.map((product) => (

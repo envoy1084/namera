@@ -105,9 +105,9 @@ export const McpSection = () => {
                   Give your agent a wallet in one command
                 </h2>
                 <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-                  Namera has a local MCP server. Drop it into any MCP-compatible
-                  agent and your model gets wallet capabilities within scoped
-                  policies.
+                  Run the local MCP server and drop it into any MCP-compatible
+                  agent. Your agent gets wallet access with rules and
+                  permissions you define.
                 </p>
               </div>
 
