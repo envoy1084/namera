@@ -23,7 +23,7 @@ const useCases: UseCase[] = [
     description:
       "Enforce rules onchain limiting contracts calls, gas usage, and more.",
     icon: ShieldCheckIcon,
-    key: "",
+    key: "spending-guardrails",
     title: "Spending Guardrails",
   },
   {
@@ -53,10 +53,11 @@ const useCases: UseCase[] = [
     title: "Usage-Based Billing",
   },
   {
-    description: "Restrict wallet actions to specific time windows.",
+    description:
+      "Let agents execute trades, manage liquidity, and act on strategy automatically.",
     icon: ClockCountdownIcon,
-    key: "time-locked-spending",
-    title: "Time-Locked Spending",
+    key: "automated-trading",
+    title: "Automated Trading",
   },
 ];
 
@@ -82,7 +83,7 @@ const UseCaseCard = ({ useCase }: { useCase: UseCase }) => {
       {/* Hover glow */}
       <div
         aria-hidden={true}
-        className="pointer-events-none absolute top-6 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full opacity-0 blur-2xl"
+        className="pointer-events-none absolute top-6 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-2xl"
         style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
       />
 
@@ -110,7 +111,7 @@ const UseCaseCard = ({ useCase }: { useCase: UseCase }) => {
 export const UseCases = () => {
   return (
     <section
-      className="relative mx-auto flex max-w-7xl flex-col gap-14 px-4 py-[12dvh] min-h-screen items-center justify-center"
+      className="relative mx-auto flex max-w-7xl flex-col gap-14 px-4 py-[12dvh] items-center"
       id="use-cases"
     >
       <Hr />
@@ -120,7 +121,7 @@ export const UseCases = () => {
           Use Cases
         </p>
         <h2 className="heading-gradient mx-auto max-w-3xl pb-2 text-center text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          Built for builders who move onchain.
+          For builders who move onchain
         </h2>
       </div>
 

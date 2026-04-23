@@ -1,30 +1,13 @@
-import { useEffect, useState } from "react";
-
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@namera-ai/ui/components/ui/button";
 import { ButtonGroup } from "@namera-ai/ui/components/ui/button-group";
 import { ArrowRight, CheckIcon, CopyIcon } from "lucide-react";
-import { useCopyToClipboard } from "usehooks-ts";
+
+import { useCopyCommand } from "@/hooks/use-copy-command";
 
 export const Hero = () => {
-  const [_, copy] = useCopyToClipboard();
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    copy("npm i -g @namera-ai/cli").catch(console.error);
-    setCopied(true);
-  };
-
-  useEffect(() => {
-    if (!copied) return;
-
-    const timeout = window.setTimeout(() => {
-      setCopied(false);
-    }, 1600);
-
-    return () => window.clearTimeout(timeout);
-  }, [copied]);
+  const { copied, handleCopy } = useCopyCommand("npm i -g @namera-ai/cli");
 
   return (
     <section className="relative pt-[18dvh] pb-[8dvh] overflow-hidden">
@@ -51,9 +34,12 @@ export const Hero = () => {
             Define fine-grained permissions with session keys and let agents
             execute transactions on your behalf.
           </p>
-          <ButtonGroup>
+          <ButtonGroup className="max-w-full overflow-x-auto">
+            <span className="flex items-center px-4 font-geist-mono text-xs text-white/30 border border-white/10 bg-white/[0.02] rounded-xl rounded-r-none border-r-0 select-none">
+              Start
+            </span>
             <Button
-              className="rounded-xl"
+              className="rounded-none"
               onClick={handleCopy}
               size="xl"
               variant="outline"
@@ -67,8 +53,11 @@ export const Hero = () => {
                 <CopyIcon className="size-3.5" />
               )}
             </Button>
+            <span className="flex items-center px-4 font-geist-mono text-xs text-white/30 border border-white/10 bg-white/[0.02] border-l-0 border-r-0 select-none">
+              Read
+            </span>
             <Button
-              className="rounded-xl group pr-4"
+              className="rounded-xl rounded-l-none group pr-4"
               render={<Link to="/docs/$" />}
               size="xl"
               variant="outline"
