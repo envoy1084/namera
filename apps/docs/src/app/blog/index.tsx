@@ -20,6 +20,7 @@ import {
   getPaginationRange,
 } from "@/lib/blog";
 import { env } from "@/lib/env";
+import { generateBaseBlogSeo } from "@/lib/seo/blog";
 import { sourceBlog } from "@/lib/source";
 import type { BlogCardProps } from "@/types";
 
@@ -155,33 +156,7 @@ export const Route = createFileRoute("/blog/")({
     });
     return res;
   },
-  head: () => ({
-    links: [{ href: `${env.baseUrl}blog`, rel: "canonical" }],
-    meta: [
-      { title: "Blog | Namera" },
-      {
-        content:
-          "Deep dives on programmable wallet infrastructure, session keys, smart accounts, and safe onchain execution for developers building autonomous agents.",
-        name: "description",
-      },
-      { content: "index, follow", name: "robots" },
-      { content: "website", property: "og:type" },
-      { content: "Blog | Namera", property: "og:title" },
-      {
-        content:
-          "Deep dives on programmable wallet infrastructure, session keys, smart accounts, and safe onchain execution for developers building autonomous agents.",
-        property: "og:description",
-      },
-      { content: `${env.baseUrl}blog`, property: "og:url" },
-      { content: "Namera", property: "og:site_name" },
-      { content: "summary_large_image", name: "twitter:card" },
-      { content: "@namera_ai", name: "twitter:site" },
-      { content: "Blog | Namera", name: "twitter:title" },
-      {
-        content:
-          "Deep dives on programmable wallet infrastructure, session keys, smart accounts, and safe onchain execution for developers building autonomous agents.",
-        name: "twitter:description",
-      },
-    ],
-  }),
+  head: () => {
+    return generateBaseBlogSeo();
+  },
 });
