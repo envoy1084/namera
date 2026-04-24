@@ -68,7 +68,7 @@ const policyRows: PolicyRow[] = [
 const PolicyCard = () => {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0c0d] backdrop-blur-sm"
+      className="relative overflow-hidden rounded-2xl border bg-[#0b0c0d] backdrop-blur-sm"
       style={{
         boxShadow:
           "0 0 0 1px rgba(255,255,255,0.02), 0 20px 60px -20px rgba(0,0,0,0.8)",
