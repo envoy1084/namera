@@ -9,8 +9,8 @@ const products = [
       "Manage smart wallets, session keys, and agent access through a unified layer without running your own backend",
     key: "platform",
     label: "Platform",
-    stat: "1",
-    statSub: "Interface",
+    stat: "90%",
+    statSub: "Less Overhead",
   },
   {
     color: "#b6d6ff",
@@ -19,7 +19,7 @@ const products = [
     key: "sdk",
     label: "SDK",
     stat: "5 min",
-    statSub: "Integration",
+    statSub: "Integration time",
   },
   {
     color: "#d6fe51",
@@ -28,7 +28,7 @@ const products = [
     key: "cli",
     label: "CLI",
     stat: "100%",
-    statSub: "Local",
+    statSub: "Local Control",
   },
 ];
 
