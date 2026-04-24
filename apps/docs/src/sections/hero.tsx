@@ -1,13 +1,14 @@
 import { Link } from "@tanstack/react-router";
 
-import { Button } from "@namera-ai/ui/components/ui/button";
+import { Button, buttonVariants } from "@namera-ai/ui/components/ui/button";
 import { ButtonGroup } from "@namera-ai/ui/components/ui/button-group";
+import { cn } from "@namera-ai/ui/lib/utils";
 import { ArrowRight, CheckIcon, CopyIcon } from "lucide-react";
 
-import { useCopyCommand } from "@/hooks/use-copy-command";
+import { useCopyToClipboard } from "@/hooks/misc";
 
 export const Hero = () => {
-  const { copied, handleCopy } = useCopyCommand("npm i -g @namera-ai/cli");
+  const { copied, copy } = useCopyToClipboard();
 
   return (
     <section className="relative pt-[18dvh] pb-[8dvh] overflow-hidden">
@@ -35,12 +36,17 @@ export const Hero = () => {
             execute transactions within the limits you define.
           </p>
           <ButtonGroup className="max-w-full overflow-x-auto">
-            <span className="flex items-center px-4 font-geist-mono text-xs text-white/30 border border-white/10 bg-white/[0.02] rounded-xl rounded-r-none border-r-0 select-none">
-              Start
+            <span
+              className={cn(
+                buttonVariants({ size: "xl", variant: "outline" }),
+                "rounded-r-none hover:bg-background! hover:text-muted-foreground",
+              )}
+            >
+              Get Started
             </span>
             <Button
               className="rounded-none"
-              onClick={handleCopy}
+              onClick={() => copy("npm i -g @namera-ai/cli")}
               size="xl"
               variant="outline"
             >
@@ -53,9 +59,7 @@ export const Hero = () => {
                 <CopyIcon className="size-3.5" />
               )}
             </Button>
-            <span className="flex items-center px-4 font-geist-mono text-xs text-white/30 border border-white/10 bg-white/[0.02] border-l-0 border-r-0 select-none">
-              Read
-            </span>
+
             <Button
               className="rounded-xl rounded-l-none group pr-4"
               render={<Link to="/docs/$" />}

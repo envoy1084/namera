@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { useCopyToClipboard } from "usehooks-ts";
+import { useCopyToClipboard as useCopyToClipboardHook } from "usehooks-ts";
 
-export const useCopyCommand = (command: string) => {
-  const [, copy] = useCopyToClipboard();
+export const useCopyToClipboard = () => {
+  const [, copy] = useCopyToClipboardHook();
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    copy(command).catch(console.error);
+  const handleCopy = (text: string) => {
+    copy(text).catch(console.error);
     setCopied(true);
   };
 
@@ -17,5 +17,5 @@ export const useCopyCommand = (command: string) => {
     return () => window.clearTimeout(timeout);
   }, [copied]);
 
-  return { copied, handleCopy };
+  return { copied, copy: handleCopy };
 };

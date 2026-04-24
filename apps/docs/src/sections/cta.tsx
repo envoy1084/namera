@@ -6,7 +6,7 @@ import { ArrowRight, CheckIcon, CopyIcon } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 
 import { AmbientGlow, Hr } from "@/components/misc";
-import { useCopyCommand } from "@/hooks/use-copy-command";
+import { useCopyCommand } from "@/hooks/misc/use-copy-to-clipboard";
 
 const steps = [
   { dim: "Smart", key: "create", lit: "Wallets" },
