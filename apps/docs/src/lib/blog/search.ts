@@ -4,6 +4,9 @@ import type { BlogCardProps } from "@/types";
 
 export const BlogSearchParams = Schema.toStandardSchemaV1(
   Schema.Struct({
+    category: Schema.optional(
+      Schema.Literals(["case-study", "community", "news", "changelog"]),
+    ),
     from: Schema.optional(Schema.String),
     limit: Schema.optional(Schema.Int.check(Schema.isGreaterThan(0))),
     page: Schema.optional(Schema.Int.check(Schema.isGreaterThan(0))),
@@ -34,6 +37,10 @@ const applyFilters = (
       const toDate = new Date(filters.to);
       if (!Number.isNaN(toDate.getTime()) && item.datePublished > toDate)
         return false;
+    }
+
+    if (filters.category) {
+      return filters.category === item.category;
     }
 
     return true;

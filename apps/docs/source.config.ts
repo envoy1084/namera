@@ -34,6 +34,7 @@ export const blog = defineDocs({
     schema: pageSchema.extend({
       author: z.string(),
       authorUrl: z.string().optional(),
+      category: z.enum(["case-study", "community", "news", "changelog"]),
       date: z.iso.date().or(z.date()),
       image: z.string().optional(),
     }),
