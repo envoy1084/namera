@@ -51,6 +51,7 @@ const serverLoader = createServerFn({
         image = ogImage.toString();
       }
       return {
+        category: page.data.category,
         author: page.data.author,
         datePublished: datePublished,
         description: page.data.description,

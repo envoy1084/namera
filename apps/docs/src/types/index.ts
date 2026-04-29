@@ -29,6 +29,8 @@ export type DocsMetadata = {
   keywords?: string;
 };
 
+export type BlogCategory = "case-study" | "community" | "news" | "changelog";
+
 export type BlogCardProps = {
   title: string;
   description?: string;
@@ -37,4 +39,5 @@ export type BlogCardProps = {
   lastModified: Date;
   slug: string;
   image: string;
+  category: BlogCategory;
 };

@@ -10,8 +10,37 @@ import {
   InputGroupInput,
 } from "@namera-ai/ui/components/ui/input-group";
 import { Kbd } from "@namera-ai/ui/components/ui/kbd";
+import { cn } from "@namera-ai/ui/lib/utils";
 import { MagnifyingGlassIcon, RssIcon } from "@phosphor-icons/react";
 import { useDebounceCallback } from "usehooks-ts";
+
+import type { BlogCategory } from "@/types";
+
+const categories: {
+  label: string;
+  value?: BlogCategory;
+}[] = [
+  {
+    label: "All",
+    value: undefined,
+  },
+  {
+    label: "Community",
+    value: "community",
+  },
+  {
+    label: "Case Studies",
+    value: "case-study",
+  },
+  {
+    label: "News",
+    value: "news",
+  },
+  {
+    label: "Changelog",
+    value: "changelog",
+  },
+];
 
 export const BlogHero = () => {
   const search = useSearch({ from: "/blog/" });
@@ -36,6 +65,18 @@ export const BlogHero = () => {
     });
   }, 300);
 
+  const updateCategory = useDebounceCallback((value?: BlogCategory) => {
+    navigate({
+      to: "/blog",
+      search: (prev) => ({
+        ...prev,
+        category: value,
+        page: 1,
+      }),
+      replace: true,
+    });
+  }, 300);
+
   useHotkey("/", () => {
     inputRef.current?.focus();
   });
@@ -46,17 +87,23 @@ export const BlogHero = () => {
         <h1 className="text-3xl sm:text-4xl font-semibold">Blog</h1>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-row items-center gap-3 text-sm">
-            <span className="cursor-pointer">All</span>
-            <span className="text-muted-foreground cursor-pointer">
-              Changelog
-            </span>
-            <span className="text-muted-foreground cursor-pointer">
-              Community
-            </span>
-            <span className="text-muted-foreground cursor-pointer">News</span>
-            <span className="text-muted-foreground cursor-pointer">
-              Community
-            </span>
+            {categories.map((category) => {
+              return (
+                <button
+                  className={cn(
+                    "text-muted-foreground cursor-pointer hover:text-foreground transition-colors",
+                    search.category === category.value && "text-foreground",
+                  )}
+                  key={category.value}
+                  onClick={() => {
+                    updateCategory(category.value);
+                  }}
+                  type="button"
+                >
+                  {category.label}
+                </button>
+              );
+            })}
           </div>
           <div className="flex flex-row items-center gap-2 w-full sm:w-max">
             <InputGroup className="sm:max-w-sm w-full h-10 rounded-full">
