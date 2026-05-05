@@ -41,10 +41,10 @@ export const layer = Layer.succeed(
         }
 
         if (Array.isArray(data)) {
-          return data.map((item) => JSON.stringify(item)).join("\n");
+          return `${data.map((item) => JSON.stringify(item)).join("\n")}\n`;
         }
 
-        return [data].map((item) => JSON.stringify(item)).join("\n");
+        return `${JSON.stringify(data)}\n`;
       }),
   }),
 );
