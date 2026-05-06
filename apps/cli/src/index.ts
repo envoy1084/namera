@@ -1,5 +1,7 @@
 import "dotenv/config";
 
+import { createRequire } from "node:module";
+
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { ConfigProvider, Console, Effect, Layer } from "effect";
 import { CliError, Command } from "effect/unstable/cli";
@@ -16,6 +18,9 @@ import {
   SmartAccountManager,
   Web3Service,
 } from "./layers";
+
+const require = createRequire(import.meta.url);
+const packageJson = require("../package.json");
 
 const command = Command.make("namera", {}, () =>
   Effect.fail(
@@ -58,7 +63,7 @@ const cli = Effect.gen(function* () {
   yield* configManager.ensureConfigDirExists();
 
   yield* Command.run(command, {
-    version: "0.0.1",
+    version: packageJson.version,
   });
 }).pipe(
   Effect.provide(Layers),
